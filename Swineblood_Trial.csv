@@ -1,0 +1,16 @@
+Project,Pattern,Stain,Location x,Location y,Location z,Surface,M axis (mm),m axis (mm),alpha,beta,gamma,Intersect x,Intersect y,Intersect z
+castoff_2019_06.21,Pattern 1,UF01,250,35.9,93.8,Back Wall,3.3,3.2,73.9,75.9,240.4,28.7,91.4,62.2
+castoff_2019_06.21,Pattern 1,UF02,250,36.5,117.7,Back Wall,3.5,3.5,79.8,-87,163.4,0,23.6,74.6
+castoff_2019_06.21,Pattern 1,UF03,250,34.9,129.8,Back Wall,3.2,3.1,77.5,85.4,201.4,0,55.1,78.3
+castoff_2019_06.21,Pattern 1,UF04,250,42.5,170.6,Back Wall,4.1,3.7,62.4,83.9,191.8,0,69.2,42.7
+castoff_2019_06.21,Pattern 1,UF05,250,46.4,194.9,Back Wall,4.2,3.1,48,-89.8,179.8,33.8,45.6,0
+castoff_2019_06.21,Pattern 1,UU06,196,64.6,243,Ceiling,3.9,3.4,62.7,82.4,15,75,32.2,0
+castoff_2019_06.21,Pattern 1,UU07,145.8,65.9,243,Ceiling,3.1,2.9,70.2,71,72.8,125.4,0,51.7
+castoff_2019_06.21,Pattern 1,UU08,55.2,58.1,243,Ceiling,3.7,3.1,57.4,84.8,171.8,208.7,36,0
+castoff_2019_06.21,Pattern 1,UU09,38.8,54.8,243,Ceiling,3.1,2.3,48.2,79.4,167.8,250,9.3,1.1
+castoff_2019_06.21,Pattern 1,UU10,22.8,52,243,Ceiling,2.7,1.6,37.2,86,177,250,40,70.2
+castoff_2019_06.21,Pattern 1,UB11,0,49.1,235.9,Front Wall,2.4,2,55.7,87.2,182.4,250,37.1,66.1
+castoff_2019_06.21,Pattern 1,UB12,0,48.3,228.8,Front Wall,3.2,2.6,54.5,86.1,183.2,250,31.2,51.5
+castoff_2019_06.21,Pattern 1,UB13,0,47.5,221.1,Front Wall,3.8,3.4,64.1,-83.7,183.8,250,75.2,102.8
+castoff_2019_06.21,Pattern 1,UB14,0,47.3,217.8,Front Wall,5.7,5,61.8,90,185.7,250,47.1,83.7
+castoff_2019_06.21,Pattern 1,UB15,0,46.4,209.9,Front Wall,2.8,2.7,74.3,-85.6,182.8,250,65.8,142.3

@@ -400,7 +400,7 @@ zlim([min_room_size-100,max_room_size+100]);
 % plot(Xref,Zref,'c.','MarkerSize',20); %Plot Automatically Generated Reference Point from Geometric Circle Fit Method
 h_guess = plot(XZref(1),XZref(2),'g.','MarkerSize',20);
 h_xz = [h1_front_xz h1_downward_xz h1_back_xz h1_upward_xz h2_xz h3_xz(1) h_guess]; % h9(sample2) h10 %Plot Automatically Generated Reference Point by Pratt Method
-legend(h_xz, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Automated Reference Point by Pratt Method')
+legend(h_xz, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Automated Reference Point by Pratt Method', 'Location', 'northeastoutside')
 chi = linspace(0, 2*pi, 25); %Angle Vector for Plotting Known Cast-off Motion
 
 % ************************************************
@@ -832,7 +832,7 @@ p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor
 p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)^NUM_clstr)),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
 p7 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(3)^NUM_clstr)),'FaceColor',cell2mat(colorcu(3)),'EdgeAlpha',transcu(4),'FaceAlpha',transcu(3));
 p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1)]; % p3 p4
-legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
 title({'Castoff Reconstruction'});
 xlabel(['X-Axis (cm)']);
 ylabel(['Y-Axis (cm)']);

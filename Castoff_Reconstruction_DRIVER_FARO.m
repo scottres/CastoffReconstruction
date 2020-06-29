@@ -114,8 +114,10 @@
 % % %  - 'opti_space' Set Equal to '1' to Analyze Spatter with Equally Spaced Stains (by Distance between Stains), Set Equal to '0' to Not Apply Equal Spacing. Use with Downsampling (dwn_samp_stains = 1). (MAIN line 146)
 % % %  - 'opti_angle' Set Equal to '1' to Analyze Spatter with Equally Spaced Stains (by Angle between Stains), Set Equal to '0' to Not Apply Equal Spacing. Use with Downsampling (dwn_samp_stains = 1).
 
+
 %Note to User:
 %Script Requires Functions 'CastoffKinematics_FUNC_v5' & 'lineSegmentIntersect.m' & 'point_to_line.m' & 'gauss_distribution' & 'INCUBE.m' to Run
+
 
 clear,clc,close all
 
@@ -140,8 +142,6 @@ tic
 
 [num,txt,raw] = xlsread('Castoff_Reconstruction_Liscio_Trial_1_Human_Created.csv','B1:H250'); %Read in .CSV data file
 
-% pattern = txt(:,2); %Import Pattern Information
-% stainID = txt(:,3); %Import Stain ID
 x = num(:,1); %Import X-coordinate Locations (cm)
 y = num(:,2); %Import Y-coordinate Locations (cm)
 z = num(:,3); %Import Z-coordinate Locations (cm)

@@ -58,7 +58,7 @@
 % % % 
 % % % Instructions to Run:
 % % % 1. Save all included files to the same directory.
-% % % 2. Set desired DRIVER (lines 140-259) and MAIN (lines 124-147) User Inputs along with Ad-hoc User defined Variables.
+% % % 2. Set desired DRIVER (lines 140-259) and MAIN (lines 124-147) User Inputs along with Ad-hoc User defined Variables. (FARO and Hemospat Drivers are provided for trialing code)
 % % % 3. Choose desired clustering method ('dwn_samp_stains' and 'opti_space' is the default Clustering Method).
 % % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m').
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').

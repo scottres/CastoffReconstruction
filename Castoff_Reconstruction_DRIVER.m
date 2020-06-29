@@ -114,8 +114,10 @@
 % % %  - 'opti_space' Set Equal to '1' to Analyze Spatter with Equally Spaced Stains (by Distance between Stains), Set Equal to '0' to Not Apply Equal Spacing. Use with Downsampling (dwn_samp_stains = 1). (MAIN line 146)
 % % %  - 'opti_angle' Set Equal to '1' to Analyze Spatter with Equally Spaced Stains (by Angle between Stains), Set Equal to '0' to Not Apply Equal Spacing. Use with Downsampling (dwn_samp_stains = 1).
 
+
 %Note to User:
 %Script Requires Functions 'Castoff_Reconstruction_DRIVER.m' & 'Castoff_Reconstruction_MAIN.m' & 'Castoff_Reconstruction_FUNC.m' & 'lineSegmentIntersect.m' & 'point_to_line.m' & 'gauss_distribution' & Desired Data, e.g. 'Ink_Trial.csv' or 'Swineblood_Trial.csv' to Run
+
 
 clear,clc
 
@@ -142,8 +144,6 @@ drive_data = 'Swineblood_Trial.csv';
 drive_datamat = regexprep(drive_data,'.csv','','ignorecase'); %Change .mat name for Saving Results
 drive_datamat = strcat(drive_datamat,'_DRIVER.mat'); %Change .mat name for Saving Results
 
-pattern =txt(:,2); %Import Pattern Information
-stainID = txt(:,3); %Import Stain ID
 x = num(:,1); %Import X-coordinate Locations in cm
 y = num(:,2); %Import Y-coordinate Locations in cm
 z = num(:,3); %Import Z-coordinate Locations in cm

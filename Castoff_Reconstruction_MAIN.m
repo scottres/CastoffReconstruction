@@ -115,12 +115,15 @@
 
 clear,clc,close all
 
-if isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
-  fprintf('Octave') % Octave is running.
+test_interpreter=["Is the interpreter Matlab or " "Octave?"];
+if (size(test_interpreter) == [1 36])
+  fprintf('Octave interpreter detected.') % Octave is probably running.
   pkg load io
   pkg load signal 
+elseif (size(test_interpreter) == [1 2])
+  fprintf('Matlab interpreter detected.') %MATLAB is probably running
 else
-  fprintf('MATLAB') %MATLAB may be running
+  fprintf('It looks like the interpreter is neither Matlab nor Octave')
 end
 
 dbstop if error

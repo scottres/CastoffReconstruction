@@ -774,7 +774,7 @@ for iq = 1:comb_num;
             if any(Weight) == 0
                 isocubes = ones(size(Weight)); %Skip PDF Distribution of All Zeros
             else
-                isocubes = isocubes+Weight; %Add PDF Distribution for first Iteration
+                isocubes = isocubes.*Weight; %Add PDF Distribution for first Iteration
             end
         else
             if any(Weight) == 0

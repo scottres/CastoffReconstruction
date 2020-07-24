@@ -120,12 +120,15 @@
 
 clear,clc
 
-if isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
-  fprintf('Octave') % Octave is running.
+test_interpreter=["Is the interpreter Matlab or " "Octave?"];
+if (size(test_interpreter) == [1 36])
+  fprintf('Octave interpreter detected.') % Octave is probably running.
   pkg load io
   pkg load signal 
+elseif (size(test_interpreter) == [1 2])
+  fprintf('Matlab interpreter detected.') %MATLAB is probably running
 else
-  fprintf('MATLAB') %MATLAB may be running
+  fprintf('It looks like the interpreter is neither Matlab nor Octave')
 end
 
 dbstop if error
@@ -164,8 +167,8 @@ alpha = (num(:,7)'*pi/180)'; %Import Alpha Pitching Impact Angle
 alpha(any(alpha==0,1))=0.00000000001; %Replace All Zeros with Near Zero Number
 gamma = (num(:,9)'*pi/180)'; %Import Gamma Glancing Impact Angle
 gamma(any(gamma==0,1))=0.00000000001; %Replace All Zeros with Near Zero Number
-gamma(any(gamma>(2*pi),1)) = gamma(any(gamma>(2*pi),1))-2*pi; %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
-gamma(any(gamma<0,1)) = gamma(any(gamma<0,1))+2*pi; %Replace Gamma Values Less than 0*pi Radians with Same Angle within Allotted Zero to 2pi Range
+gamma = mod(gamma,(2*pi)); %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
+
 % for ia = 1:length(gamma)
 %     beta(ia) = atan(tan(alpha(ia))/sin(gamma(ia))); %Calculate Beta Yawing Impact Angle
 % end

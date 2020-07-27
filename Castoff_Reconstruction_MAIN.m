@@ -135,6 +135,7 @@ percentiles = [0.95 0.80 0.65]; %Choose Resultant Product Distribution Percentil
 data = 'Ink_Trial_DRIVER.mat';
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 datamat = regexprep(data,'_DRIVER','','ignorecase'); %Change .mat name for Saving Results
+dlmwrite(regexprep(datamat,'.mat','_OUTPUT.txt'),[]); %Create Output .txt-file
 
 user_clstr = 0; %Set Equal to '1' to Run One Specific Cluster of Three Stains, Set Equal to '0' for another Cluster Option
 stain_cluster = [52 30 11]; %Enter user defined stains indices in an nx3 matrix for n clusters to cluster specific stain combinations
@@ -155,6 +156,99 @@ dist_std = 5; %Select Standard Deviation of Distance between Stains for Clusteri
 
 opti_space = 1; %Set Equal to '1' to Analyze Spatter with Equally Spaced Stains (by Distance between Stains), Set Equal to '0' to Not Apply Equal Spacing. Use with Downsampling (dwn_samp_stains = 1).
 opti_angle = 0; %Set Equal to '1' to Analyze Spatter with Equally Spaced Stains (by Angle between Stains), Set Equal to '0' to Not Apply Equal Spacing. Use with Downsampling (dwn_samp_stains = 1).
+
+SF_cu_range = [0,inf]; %Distance Spreading Factor Allowable Range
+SF_theta_range = [0,2*pi]; %In-plane Angle Spreading Factor Allowable Range
+SF_upsilon_range = [0,2*pi]; %Off-plane Angle Spreading Factor Allowable Range
+dalpha_range = [0,0.5*pi]; %Alpha Impact Angle Range
+dgamma_range = [0,2*pi]; %Gamma Directional Angle Range
+res_range = [0,15]; %Spatial Region Resolution Allowable Range
+user_default = 0; %Ideal Clustering Value
+dwn_samp_default = 1; %Ideal Clustering Value
+dwnsamp_default = 1; %Ideal Clustering Value
+sampsize_default = 3; %Ideal Clustering Value
+overlap_default = dwnsamp*(sampsize-1); %Ideal Clustering Value
+alpha_default = 0; %Ideal Clustering Value
+dist_default = 0; %Ideal Clustering Value
+opti_default = 1; %Ideal Clustering Value
+
+%Input Variables and Warnings for OUTPUT
+fileID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
+fprintf(fileID, '%s\r\n\n', regexprep(datamat,'.mat','_OUTPUT.txt'),''); %Output Title to OUTPUT
+fprintf(fileID, '%s\r\n\n', 'INPUTS:'); %Output Inputs Header
+if Spread_Fact_cu >= SF_cu_range(1) && Spread_Fact_cu < SF_cu_range(2)
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_cu =','',num2str(Spread_Fact_cu))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "Spread_Fact_cu" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_cu =','',num2str(Spread_Fact_cu),' (ideal "Spread_Fact_cu" Range =','',num2str(SF_cu_range))); %Inputs are within Predefined Range
+end
+if Spread_Fact_theta >= SF_theta_range(1) && Spread_Fact_theta < SF_theta_range(2)
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta =','',num2str(Spread_Fact_theta))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "Spread_Fact_theta" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta =','',num2str(Spread_Fact_theta),' (ideal "Spread_Fact_theta" Range =','',num2str(SF_theta_range))); %Inputs are within Predefined Range
+end
+if Spread_Fact_upsilon >= SF_upsilon_range(1) && Spread_Fact_upsilon < SF_upsilon_range(2)
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_upsilon =','',num2str(Spread_Fact_upsilon))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "Spread_Fact_upsilon" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_upsilon =','',num2str(Spread_Fact_upsilon),' (ideal "Spread_Fact_upsilon" Range =','',num2str(SF_upsilon_range))); %Inputs are within Predefined Range
+end
+if res >= res_range(1) && res < res_range(2)
+  fprintf(fileID, '%s\r\n', strcat('res =','',num2str(res))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "res" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('res =','',num2str(res),' (ideal "res" Range =','',num2str(res_range))); %Inputs are within Predefined Range
+end
+if user_clstr == user_default
+  fprintf(fileID, '%s\r\n', strcat('user_clstr =','',num2str(user_clstr))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "user_clstr" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('user_clstr =','',num2str(user_clstr),' (ideal "user_clstr" value =','',num2str(user_default),')')); %Inputs are within Predefined Range
+end
+if dwn_samp_stains == dwn_samp_default
+  fprintf(fileID, '%s\r\n', strcat('dwn_samp_stains =','',num2str(dwn_samp_stains))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "dwn_samp_stains" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('dwn_samp_stains =','',num2str(dwn_samp_stains),' (ideal "dwn_samp_stains" value =','',num2str(dwn_samp_default),')')); %Inputs are within Predefined Range
+end
+if dwnsamp == dwnsamp_default
+  fprintf(fileID, '%s\r\n', strcat('dwnsamp =','',num2str(dwnsamp))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "dwnsamp" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('dwnsamp =','',num2str(dwnsamp),' (ideal "dwnsamp" value =','',num2str(dwnsamp_default),')')); %Inputs are within Predefined Range
+end
+if sampsize == sampsize_default
+  fprintf(fileID, '%s\r\n', strcat('sampsize =','',num2str(sampsize))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "sampsize" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('sampsize =','',num2str(sampsize),' (ideal "sampsize" value =','',num2str(sampsize_default),')')); %Inputs are within Predefined Range
+end
+if overlap == overlap_default
+  fprintf(fileID, '%s\r\n', strcat('overlap =','',num2str(overlap))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "overlap" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('overlap =','',num2str(overlap),' (ideal "overlap" value =','',num2str(overlap_default),')')); %Inputs are within Predefined Range
+end
+if alpha_clstr == alpha_default
+  fprintf(fileID, '%s\r\n', strcat('alpha_clstr =','',num2str(alpha_clstr))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "alpha_clstr" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('alpha_clstr =','',num2str(alpha_clstr),' (ideal "alpha_clstr" value =','',num2str(alpha_default),')')); %Inputs are within Predefined Range
+end
+if dist_clstr == dist_default
+  fprintf(fileID, '%s\r\n', strcat('dist_clstr =','',num2str(dist_clstr))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "dist_clstr" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('dist_clstr =','',num2str(dist_clstr),' (ideal "dist_clstr" value =','',num2str(dist_default),')')); %Inputs are within Predefined Range
+end
+if opti_space == opti_default
+  fprintf(fileID, '%s\r\n', strcat('opti_space =','',num2str(opti_space))); %Inputs are within Predefined Range
+else
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "opti_space" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('opti_space =','',num2str(opti_space),' (ideal "opti_space" value =','',num2str(opti_default),')')); %Inputs are within Predefined Range
+end
+fclose(fileID); %Close OUTPUT
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%  Define Surface Normal Vectors  %%%%%%%%%%%%%%%%%%%%%
@@ -754,7 +848,7 @@ for iq = 1:comb_num;
         E_n = e_n(B(ip,:),:); %Clustered Normal Tangential Vectors
         E_t = e_t(B(ip,:),:); %Clustered Tangential Vectors
         E_nxt = e_nxt(B(ip,:),:); %Clustered Normal x Tangential Vectors
-        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,clstr_num,iq,comb_num); %Function Determining Castoff Reconstruction
+        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num); %Function Determining Castoff Reconstruction
         figure(3);
         hold on;
         plot3(xs(B(ip,:)),ys(B(ip,:)),zs(B(ip,:)),'.','MarkerSize',max_room_size*0.1,'Color','g','LineWidth',2);

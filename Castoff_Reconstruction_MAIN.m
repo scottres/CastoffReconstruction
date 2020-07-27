@@ -988,6 +988,34 @@ save(datamat); %Save Results
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Output Results  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fileID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
+fprintf(fileID, '%s\r\n', 'Cast-off Reconstruction Results:'); %Display OUTPUT Variables
+fprintf(fileID, '%12s %24s %36s\r\n','High Percentile Faces(x)','High Percentile Faces(y)','High Percentile Faces(z)'); %Display OUTPUT Variables
+for outi = 1:length(f1)
+  fprintf(fileID, '%12.3f %24.3f %36.3f\r\n',f1(outi,:)'); %Output Results to OUTPUT.txt
+end
+fprintf(fileID, '%12s %24s %36s\r\n','High Percentile Vertices(x)','High Percentile Vertices(y)','High Percentile Vertices(z)'); %Display OUTPUT Variables
+for outj = 1:length(v1)
+  fprintf(fileID, '%12.3f %24.3f %36.3f\r\n',v1(outj,:)'); %Output Results to OUTPUT.txt
+end
+fprintf(fileID, '%12s %24s %36s\r\n','Medium Percentile Faces(x)','Medium Percentile Faces(y)','Medium Percentile Faces(z)'); %Display OUTPUT Variables
+for outk = 1:length(f2)
+  fprintf(fileID, '%12.3f %24.3f %36.3f\r\n',f2(outk,:)'); %Output Results to OUTPUT.txt
+end
+fprintf(fileID, '%12s %24s %36s\r\n','Medium Percentile Vertices(x)','Medium Percentile Vertices(y)','Medium Percentile Vertices(z)'); %Display OUTPUT Variables
+for outl = 1:length(v2)
+  fprintf(fileID, '%12.3f %24.3f %36.3f\r\n',v2(outl,:)'); %Output Results to OUTPUT.txt
+end
+fprintf(fileID, '%12s %24s %36s\r\n','High Percentile Faces(x)','High Percentile Faces(y)','High Percentile Faces(z)'); %Display OUTPUT Variables
+for outm = 1:length(f3)
+  fprintf(fileID, '%12.3f %24.3f %36.3f\r\n',f3(outm,:)'); %Output Results to OUTPUT.txt
+end
+fprintf(fileID, '%12s %24s %36s\r\n','High Percentile Vertices(x)','High Percentile Vertices(y)','High Percentile Vertices(z)'); %Display OUTPUT Variables
+for outn = 1:length(v3)
+  fprintf(fileID, '%12.3f %24.3f %36.3f\r\n',v3(outn,:)'); %Output Results to OUTPUT.txt
+end
+fclose(fileID);
+
 fprintf('Script ran at %s\n', datestr(now,'HH:MM:SS.FFF')); %End Run Designator with Time
 tot_time = toc();
 fprintf('Total Elapsed Run Time: %s\n', tot_time);

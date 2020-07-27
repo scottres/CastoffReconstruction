@@ -1,4 +1,4 @@
-function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,clstr_num,iq,comb_num)
+function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num)
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % %
@@ -731,6 +731,19 @@ dalpha = (180/pi)*sqrt(sum(d_alpha.^2)); %Root Sum Squared Alpha Impact Angle Un
 d_gamma = (0.4204*exp(0.0541*alpha_orig)); %Gamma Impact Angle Uncertainty in Degrees
 dgamma = (180/pi)*sqrt(sum((d_gamma.^2))); %Root Sum Squared Gamma Impact Angle Uncertainty in Degrees
 del_rad = sqrt(sum((dalpha)^2+(dgamma)^2)); %Total Uncertainty of Alpha Impact Angle
+
+if any(d_alpha < dalpha_range(1),1) || any(d_alpha > dalpha_range(2),1)
+  file_ID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
+  fprintf(file_ID, '%s\r\n', 'WARNING: The inputted value for "d_alpha" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(file_ID, '%s\r\n', strcat('dalpha =','',num2str(d_alpha),' (ideal "dalpha" Range =','',num2str(dalpha_range))); %Inputs are within Predefined Range
+  fclose(file_ID);
+end
+if any(d_gamma < dgamma_range(1),1) || any(d_gamma > dgamma_range(2),1)
+  file_ID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
+  fprintf(file_ID, '%s\r\n', 'WARNING: The inputted value for "d_gamma" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(file_ID, '%s\r\n', strcat('dgamma =','',num2str(d_gamma),' (ideal "dgamma" Range =','',num2str(dgamma_range))); %Inputs are within Predefined Range
+  fclose(file_ID);
+end
 
 if any(del_rad) == 0;
     Psi_tot = zeros(size(isocubes)); %End Iteration if Cluster is Empty

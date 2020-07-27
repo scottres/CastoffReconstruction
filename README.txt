@@ -65,12 +65,12 @@ Required Installation for GNU Octave Compatibility: (Suggested Installation Orde
 
 Instructions to Run:
 1. Save all included files to the same directory.
-2. Set desired DRIVER (lines 140-259) and MAIN (lines 124-147) User Inputs along with Ad-hoc User defined Variables. (FARO and Hemospat Drivers are provided for trialing code)
+2. Set desired DRIVER (lines 140-259) and MAIN (lines 124-148) User Inputs along with Ad-hoc User defined Variables. (FARO and Hemospat Drivers are provided for trialing code)
 3. Choose desired clustering method ('dwn_samp_stains' and 'opti_space' is the default Clustering Method).
 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m').
 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 6. MAIN will output the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See ‘User Inputs: (DRIVER)’ ‘res’ for estimated runtimes.
-7. MAIN will save the Resultant Variables as a .mat file denoted by ‘Castoff_Reconstruction.mat’ and Output the Cast-off Reconstruction Results as Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fir automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
+7. MAIN will save the Resultant Variables as a .mat file denoted by ‘Castoff_Reconstruction.mat’ and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
 
 Figure Displaying:
  - Show and hide legends from resultant figures using:

@@ -150,22 +150,23 @@ actual_r = 70; %Actual Radius of Cast-off; Enter "NaN" if Unknown
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 drive_data = 'Swineblood_Trial.csv';
-[num,txt,raw] = xlsread(drive_data,'A1:O100'); %Read in .CSV data file
+num_ref = xlsread(drive_data); %Read in .CSV data file
+num_ref = size(num_ref,1); %Determine Length of Columns
 drive_datamat = regexprep(drive_data,'.csv','','ignorecase'); %Change .mat name for Saving Results
 drive_datamat = strcat(drive_datamat,'_DRIVER.mat'); %Change .mat name for Saving Results
 
-x = num(:,1); %Import X-coordinate Locations in cm
-y = num(:,2); %Import Y-coordinate Locations in cm
-z = num(:,3); %Import Z-coordinate Locations in cm
+x = xlsread(drive_data,strcat('D2:D',num2str(num_ref))); %Import X-coordinate Locations in cm
+y = xlsread(drive_data,strcat('E2:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
+z = xlsread(drive_data,strcat('F2:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
 
 x(any(x==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 y(any(y==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 z(any(z==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
-lngth = (num(:,5)')'; %Import Major Axis of Stains in mm
-minor = (num(:,6)')'; %Import Minor Axis of Stains in mm
-alpha = (num(:,7)'*pi/180)'; %Import Alpha Pitching Impact Angle
+lngth = xlsread(drive_data,strcat('H2:H',num2str(num_ref))); %Import Major Axis of Stains in mm
+minor = xlsread(drive_data,strcat('I2:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
+alpha = xlsread(drive_data,strcat('J2:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
 alpha(any(alpha==0,1))=0.00000000001; %Replace All Zeros with Near Zero Number
-gamma = (num(:,9)'*pi/180)'; %Import Gamma Glancing Impact Angle
+gamma = xlsread(drive_data,strcat('L2:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
 gamma(any(gamma==0,1))=0.00000000001; %Replace All Zeros with Near Zero Number
 gamma = mod(gamma,(2*pi)); %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
 
@@ -443,6 +444,8 @@ for j = 1:numstains
         face(j)=4; %Stains Contained on Surface #4
     elseif room_size(4)-2<=Zs(j) && Zs(j)<=room_size(4)+2
         face(j)=2; %Stains Contained on Surface #2
+    else
+        warning(strcat('Stain Index: ', num2str(j), ' does not belong to a surface. Verify the stain location within the input file and room boundaries are properly defined in DRIVER lines 194-199.'));
     end
 end
 

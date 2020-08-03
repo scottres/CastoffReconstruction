@@ -191,12 +191,12 @@ inclsurf_4 = 1; %Choose '1' to INCLUDE Surface #4 (Downward Surface) Stains; Cho
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Define Values  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xmin = 0.00000000001; %min(x); %Select Minimum X-coordinate for Room Assignment
-xmax = 248; %max(x); %Select Maximum X-coordinate for Room Assignment
+xmin = min(x); %0.00000000001; %Select Minimum X-coordinate for Room Assignment
+xmax = max(x); %248; %Select Maximum X-coordinate for Room Assignment
 ymin = 0.00000000001; %min(y); %Select Minimum Y-coordinate for Room Assignment
-ymax = 91.4; %max(y); %Select Maximum Y-coordinate for Room Assignment
-zmin = 0.00000000001; %min(z); %Select Minimum Z-coordinate for Room Assignment
-zmax = 243; %max(z); %Select Maximum Z-coordinate for Room Assignment
+ymax = 100; %max(y); %Select Maximum Y-coordinate for Room Assignment
+zmin = min(z); %0.00000000001; %Select Minimum Z-coordinate for Room Assignment
+zmax = max(z); %243; %Select Maximum Z-coordinate for Room Assignment
 aoi = [xmin xmax ymin ymax zmin zmax]; %Room Assignment
 
 stdev = 0.1; %Approximated Standard Deviation of Stain Width Measurement in mm

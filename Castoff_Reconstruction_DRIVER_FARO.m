@@ -459,6 +459,8 @@ for j = 1:numstains
         face(j)=4; %Stains Contained on Surface #4
     elseif room_size(4)-2<=Zs(j) && Zs(j)<=room_size(4)+2
         face(j)=2; %Stains Contained on Surface #2
+    else
+        warning(strcat('Stain Index: ', num2str(j), ' does not belong to a surface. Verify the stain location within the input file and room boundaries are properly defined in DRIVER lines 194-199.'));
     end
 end
 

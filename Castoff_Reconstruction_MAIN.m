@@ -319,6 +319,12 @@ v_nxt = [e_nxt(:,1).*v_nxt e_nxt(:,2).*v_nxt e_nxt(:,3).*v_nxt]; %Velocity Vecto
 v_t = [e_t(:,1).*v_t e_t(:,2).*v_t e_t(:,3).*v_t]; %Velocity Vector in Direction of Tangential Vector
 v = [v_n+v_t+v_nxt]; %Complete Velocity Vector
 
+x_orig = x; %Save Original Stain X-coordinates
+y_orig = y; %Save Original Stain Y-coordinates
+z_orig = z; %Save Original Stain Z-coordinates
+v_orig = v; %Save Original Stain V Vectors
+numstains_orig = numstains; %Save Original Number of Stains
+
 %Calculate Average Distance between Known Cast-off Center Location and Adjacent Stains
 xi1 = 1; %Starting Stain Index
 xij(1,:) = xi1; %Stain Iterative Index
@@ -380,11 +386,6 @@ if opti_angle == 1;
 
     yij = nonzeros(yij); %Remove Skipped Stains
 end
-
-x_orig = x; %Save Original Stain X-coordinates
-y_orig = y; %Save Original Stain Y-coordinates
-z_orig = z; %Save Original Stain Z-coordinates
-v_orig = v; %Save Original Stain V Vectors
 
 if opti_space == 1 %Only Select Stains Equally Spaced 'opti_dist' Distance Apart
     Xs = Xs(xij,:);
@@ -497,9 +498,6 @@ zref = nonzeros(zref); %Remove Zeros
 xref = xref(~isnan(xref)); %Remove NaNs
 zref = zref(~isnan(zref)); %Remove NaNs
 
-aref=[xref zref ones(size(xref))]\[-(xref.^2+zref.^2)]; %Calculate Geometric Fitted Circle from Stain Trajectory Intersections using the Geometric Circle Fit Method
-Xref = -.5*aref(1); %Determine Circle Center X-coordinate
-Zref = -.5*aref(2); %Determine Circle Center Z-coordinate
 xzref = [xref zref]; %Save Circle Center X and Z-coordinates
 XZref = CircleFitByPratt(xzref); %Calculate Geometric Fitted Circlular Arc from Stain Trajectory Intersections using the Pratt Method
 x_ref_xz = XZref(1); %Save Arc Center X-coordinate
@@ -966,11 +964,17 @@ end;
 colorcu = {[1,0,0];[0,1,0];[0,0,1];[0,1,1]};
 transcu = [1.0 0.5 0.2 0.2 0.1 0.075 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05];
 
-p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
-p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)^NUM_clstr)),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
-p7 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(3)^NUM_clstr)),'FaceColor',cell2mat(colorcu(3)),'EdgeAlpha',transcu(4),'FaceAlpha',transcu(3));
-p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1)]; % p3 p4
-legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+if isempty(nonzeros(isonorm-ones(size(isonorm)))) == 1;
+   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p9 p10(1)]; % p3 p4
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+else
+   p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
+   p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)^NUM_clstr)),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
+   p7 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(3)^NUM_clstr)),'FaceColor',cell2mat(colorcu(3)),'EdgeAlpha',transcu(4),'FaceAlpha',transcu(3));
+   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1)]; % p3 p4
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+end
+
 title({'Castoff Reconstruction'});
 xlabel(['X-Axis (cm)']);
 ylabel(['Y-Axis (cm)']);

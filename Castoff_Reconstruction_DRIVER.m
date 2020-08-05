@@ -165,9 +165,9 @@ z(any(z==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 lngth = xlsread(drive_data,strcat('H2:H',num2str(num_ref))); %Import Major Axis of Stains in mm
 minor = xlsread(drive_data,strcat('I2:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
 alpha = xlsread(drive_data,strcat('J2:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
-alpha(any(alpha==0,1))=0.00000000001; %Replace All Zeros with Near Zero Number
+alpha(any(alpha==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 gamma = xlsread(drive_data,strcat('L2:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
-gamma(any(gamma==0,1))=0.00000000001; %Replace All Zeros with Near Zero Number
+gamma(any(gamma==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 gamma = mod(gamma,(2*pi)); %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
 
 % for ia = 1:length(gamma)
@@ -233,7 +233,6 @@ t_d = [1,0,0]; %Downward Surface Tangential Vector (Downward Surface)
 room_size = [aoi(1)+0.00000000001 aoi(2) aoi(5)+0.00000000001 aoi(6)]; %Determine Room Size from Room Assignment
 max_room_size = max(room_size); %Maximum Room Dimension for Scaling Purposes
 min_room_size = min(room_size); %Minimum Room Dimension for Scaling Purposes
-Direction = [10*max_room_size 0 10*max_room_size 10*max_room_size]; %Set to [max_room_size 0 max_room_size max_room_size] for Upward cast-off; [max_room_size max_room_size max_room_size 0] for Downward cast-off
 
 Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
 Spread_Fact_theta = pi/180; %Spreading Factor %Uncertainty in In-plane Angle (Theta) in radians
@@ -310,6 +309,7 @@ surf4 = (zmin-2<=z & z<=zmin+2)'; %Surface Criteria
 for ia = 1:length(gamma)
     beta(ia,:) = atan(tan(alpha(ia))/sin(gamma(ia))); %Calculate Beta Yawing Impact Angle
 end
+beta(any(beta==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 
 for i = 1:length(gamma)
    alpha_p(i,:) = abs(atan(tan(beta(i))/tan(gamma(i)))); %Alpha Impact Angle Projected onto XZ-plane for 2D Analysis

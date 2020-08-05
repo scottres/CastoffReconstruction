@@ -160,6 +160,15 @@ U1 = [u./norm_u]; %Normalized Best Plane
 phi1 = -acos(dot([0,-1,0],Sn)); %Planar Angle to Rotate Plane about Line of Intersection to XZ-plane
 
 R1 = [((U1(1)^2)+((U1(2)^2)+(U1(3)^2))*cos(phi1)) (U1(1)*U1(2)*(1-cos(phi1))-U1(3)*sin(phi1)) (U1(1)*U1(3)*(1-cos(phi1))+U1(2)*sin(phi1)); (U1(1)*U1(2)*(1-cos(phi1))+U1(3)*sin(phi1)) ((U1(2)^2)+((U1(1)^2)+(U1(3)^2))*cos(phi1)) (U1(2)*U1(3)*(1-cos(phi1))-U1(1)*sin(phi1)); (U1(1)*U1(3)*(1-cos(phi1))-U1(2)*sin(phi1)) (U1(2)*U1(3)*(1-cos(phi1))+U1(1)*sin(phi1)) ((U1(3)^2)+((U1(1)^2)+(U1(2)^2))*cos(phi1))]; %3D Rotation Matrix
+
+if phi1 == 0;
+   XYZu = XYZt;
+   Vu = Vp;
+else
+   XYZu = (R1*XYZt')'; %Apply Rotation Matrix to Translated Stain Locations
+   Vu = (R1*Vp')'; %Apply Rotation Matrix to Projected Stain Velocity Vectors
+end
+
 XYZu = (R1*XYZt')'; %Apply Rotation Matrix to Translated Stain Locations
 Vu = (R1*Vp')'; %Apply Rotation Matrix to Projected Stain Velocity Vectors
 Vu_test = Vu;
@@ -328,6 +337,10 @@ for trj = 1:size(ABx,1)
         endpts(trj,:) = [C12(trj,:),D12(trj,:)]; %Select Bisector from Single Bisector Triangle Combination Containing Reference Point
     elseif inDA(trj) == 1
         endpts(trj,:) = [D12(trj,:),A12(trj,:)]; %Select Bisector from Single Bisector Triangle Combination Containing Reference Point
+    else
+        Psi_tot = zeros(size(isocubes)); %End Iteration if Cluster is Empty
+        ind = NaN;
+        return
     end
 end
 
@@ -894,18 +907,29 @@ z_fin = (center(3) + radius.*sin(chi))'; %Resultant Z-coordinate of Cast-off Cir
 U2 = U1; %Choose Previously Determined Line of Intersection between XZ-plane and Plane Best Fitting Stain Velocity Vectors 
 phi2 = -phi1; %Planar Angle to Rotate Plane about Line of Intersection to XZ-plane
 R2 = [((U2(1)^2)+((U2(2)^2)+(U2(3)^2))*cos(phi2)) (U2(1)*U2(2)*(1-cos(phi2))-U2(3)*sin(phi2)) (U2(1)*U2(3)*(1-cos(phi2))+U2(2)*sin(phi2)); (U2(1)*U2(2)*(1-cos(phi2))+U2(3)*sin(phi2)) ((U2(2)^2)+((U2(1)^2)+(U2(3)^2))*cos(phi2)) (U2(2)*U2(3)*(1-cos(phi2))-U2(1)*sin(phi2)); (U2(1)*U2(3)*(1-cos(phi2))-U2(2)*sin(phi2)) (U2(2)*U2(3)*(1-cos(phi2))+U2(1)*sin(phi2)) ((U2(3)^2)+((U2(1)^2)+(U2(2)^2))*cos(phi2))]; %3D Rotation Matrix
-Intt = (R2*[Xint12 Yint12 Zint12]')'; %Apply Reversed Rotation Matrix to Stain Velocity Vector Intersections
-Fint = (R2*[x_fin y_fin z_fin]')'; %Apply Reversed Rotation Matrix to Cast-off Radius & Circle
-centert = R2*center'; %Apply Reversed Rotation Matrix to Cast-off Center Location
 pu = [px2' py2' pz2'];
 bupos12 = [bxpos12' bypos12' bzpos12'];
-pt = (R2*pu')';
-btpos12 = (R2*bupos12')';
 xarc = x_arc'; %X-coordinate of Arc
 yarc = y_arc'; %Y-coordinate of Arc
 zarc = z_arc'; %Z-coordinate of Arc
 Arcu = [xarc(:) yarc(:) zarc(:)]; %Reconstructed Cast-off Arc
-Arct = (R2*Arcu')'; %Translated Reconstructed Cast-off Arc
+
+if phi2 == 0;
+   Intt = [Xint12 Yint12 Zint12];
+   Fint = [x_fin y_fin z_fin];
+   centert = center;
+   pt = pu;
+   btpos12 = bupos12;
+   Arct = Arcu;
+else
+   Intt = (R2*[Xint12 Yint12 Zint12]')'; %Apply Reversed Rotation Matrix to Stain Velocity Vector Intersections
+   Fint = (R2*[x_fin y_fin z_fin]')'; %Apply Reversed Rotation Matrix to Cast-off Radius & Circle
+   centert = R2*center'; %Apply Reversed Rotation Matrix to Cast-off Center Location
+   pt = (R2*pu')';
+   btpos12 = (R2*bupos12')';
+   Arct = (R2*Arcu')'; %Translated Reconstructed Cast-off Arc
+end
+
 % % For Plotting Triangles to Select Triangle Containing User Defined Reference Point
 % XYZnt = (R2*XYZu')';
 % Vnt = (R2*Vu')';

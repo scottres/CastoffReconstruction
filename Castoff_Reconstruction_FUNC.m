@@ -224,7 +224,12 @@ trajectory = [x_cs1 z_cs1 x_cs2 z_cs2]; %Compiling Trajectories
 numstains = size(trajectory,1); %Revaluating Variables
 
 Refp = Ref-Xp; %Translate User Defined Reference Point to Origin
-Refu = (R1*Refp')'; %Rotate User Defined Reference Point to XZ-plane
+
+if phi1 == 0;
+   Refu = Refp;
+else
+   Refu = (R1*Refp')'; %Rotate User Defined Reference Point to XZ-plane
+end
 
 x_ref = Refu(1); %Select X-coordinate of User Defined Reference Point
 y_ref = Refu(2); %Select Y-coordinate of User Defined Reference Point
@@ -917,7 +922,7 @@ Arcu = [xarc(:) yarc(:) zarc(:)]; %Reconstructed Cast-off Arc
 if phi2 == 0;
    Intt = [Xint12 Yint12 Zint12];
    Fint = [x_fin y_fin z_fin];
-   centert = center;
+   centert = center';
    pt = pu;
    btpos12 = bupos12;
    Arct = Arcu;
@@ -971,7 +976,13 @@ Weight = (1/dalpha).*(1/dgamma); %Weighting by Alpha, Gamma, and Zeta (prod(sum(
 for cu3 = 1:numel(cu_cx)
     cu_v(cu3,:) = [cu_cx(cu3)-centerp(1),cu_cy(cu3)-centerp(2),cu_cz(cu3)-centerp(3)]; %Vector between Cube Centers and Arc Center
     proj_cuv(cu3,:) = cu_v(cu3,:)-((cu_v(cu3,:)*Sn')./sqrt(sum(Sn.^2,2)).^2).*Sn; %Projected Vector cu_v onto Mean Plane
-    cup = [R1*[proj_cuv(cu3,:); proj_cuv(cu3,:); proj_cuv(cu3,:)]']'; %Translate and Rotate Projected Vector to XZ-plane
+    
+    if phi1 == 0;
+       cup = [proj_cuv(cu3,:); proj_cuv(cu3,:); proj_cuv(cu3,:)];
+    else
+       cup = [R1*[proj_cuv(cu3,:); proj_cuv(cu3,:); proj_cuv(cu3,:)]']'; %Translate and Rotate Projected Vector to XZ-plane
+    end
+    
     CUP(cu3,:) = cup(1,:); %Store Translated and Rotated Projected Vector to XZ-plane
     slope_p(cu3,:) = (CUP(cu3,3)/CUP(cu3,1)); %Determine Slope of Translated and Rotated Projected Vector
     perp_p(cu3,:) = -1*(1/slope_p(cu3,:)); %Determine Perpendicular Slope of Translated and Rotated Projected Vector

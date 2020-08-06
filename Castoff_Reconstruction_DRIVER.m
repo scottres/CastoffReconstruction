@@ -155,6 +155,10 @@ num_ref = size(num_ref,1); %Determine Length of Columns
 drive_datamat = regexprep(drive_data,'.csv','','ignorecase'); %Change .mat name for Saving Results
 drive_datamat = strcat(drive_datamat,'_DRIVER.mat'); %Change .mat name for Saving Results
 
+room_dim = xlsread(drive_data,'B1:B3');
+room_length=room_dim(1);
+room_width=room_dim(2);
+room_height=room_dim(3);
 x = xlsread(drive_data,strcat('D2:D',num2str(num_ref))); %Import X-coordinate Locations in cm
 y = xlsread(drive_data,strcat('E2:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
 z = xlsread(drive_data,strcat('F2:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
@@ -191,12 +195,12 @@ inclsurf_4 = 1; %Choose '1' to INCLUDE Surface #4 (Downward Surface) Stains; Cho
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Define Values  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xmin = min(x); %0.00000000001; %Select Minimum X-coordinate for Room Assignment
-xmax = max(x); %248; %Select Maximum X-coordinate for Room Assignment
-ymin = 0.00000000001; %min(y); %Select Minimum Y-coordinate for Room Assignment
-ymax = 100; %max(y); %Select Maximum Y-coordinate for Room Assignment
-zmin = min(z); %0.00000000001; %Select Minimum Z-coordinate for Room Assignment
-zmax = max(z); %243; %Select Maximum Z-coordinate for Room Assignment
+xmin = min(min(x),0); %0.00000000001; %Select Minimum X-coordinate for Room Assignment
+xmax = max(max(x),room_length); %248; %Select Maximum X-coordinate for Room Assignment
+ymin = min(min(y),0.00000000001); %min(y); %Select Minimum Y-coordinate for Room Assignment
+ymax = min(max(y), room_width); %max(y); %Select Maximum Y-coordinate for Room Assignment
+zmin = min(min(z),0); %0.00000000001; %Select Minimum Z-coordinate for Room Assignment
+zmax = max(max(z),room_height); %243; %Select Maximum Z-coordinate for Room Assignment
 aoi = [xmin xmax ymin ymax zmin zmax]; %Room Assignment
 
 stdev = 0.1; %Approximated Standard Deviation of Stain Width Measurement in mm

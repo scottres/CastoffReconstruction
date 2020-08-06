@@ -169,8 +169,6 @@ else
    Vu = (R1*Vp')'; %Apply Rotation Matrix to Projected Stain Velocity Vectors
 end
 
-XYZu = (R1*XYZt')'; %Apply Rotation Matrix to Translated Stain Locations
-Vu = (R1*Vp')'; %Apply Rotation Matrix to Projected Stain Velocity Vectors
 Vu_test = Vu;
 
 %Create Plane for Plotting

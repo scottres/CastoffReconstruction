@@ -325,6 +325,23 @@ z_orig = z; %Save Original Stain Z-coordinates
 v_orig = v; %Save Original Stain V Vectors
 numstains_orig = numstains; %Save Original Number of Stains
 
+figure(5); 
+hold on; 
+h1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','c','LineWidth',5); 
+h1_downward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(5) aoi(5) aoi(5) aoi(5) aoi(5)],'Color','g','LineWidth',4); 
+h1_back = plot3([aoi(2) aoi(2) aoi(2) aoi(2) aoi(2)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','b','LineWidth',3); 
+h1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)],[aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(6) aoi(6) aoi(6) aoi(6) aoi(6)],'Color','y','LineWidth',2); 
+h2 = plot3(x_orig,y_orig,z_orig, '.','MarkerSize',max_room_size*0.1,'Color','r','LineWidth',2); 
+xlabel(['X-Axis (cm)']); 
+ylabel(['Y-Axis (cm)']); 
+zlabel(['Z-Axis (cm)']); 
+for ref1 = 1:numstains_orig;    
+  h11(ref1) = plot3([(x_orig(ref1)-10000*v_orig(ref1,1)) (x_orig(ref1)+10000*v_orig(ref1,1))],[(y_orig(ref1)-10000*v_orig(ref1,2)) (y_orig(ref1)+10000*v_orig(ref1,2))],[(z_orig(ref1)-10000*v_orig(ref1,3)) (z_orig(ref1)+10000*v_orig(ref1,3))],Color','r','LineWidth',1);
+  end
+xlim([aoi(1)-10,aoi(2)+10]);
+ylim([aoi(3)-10,aoi(4)+10]);
+zlim([aoi(5)-10,aoi(6)+10]);
+
 %Calculate Average Distance between Known Cast-off Center Location and Adjacent Stains
 xi1 = 1; %Starting Stain Index
 xij(1,:) = xi1; %Stain Iterative Index

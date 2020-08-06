@@ -559,7 +559,7 @@ h1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi
 h1_downward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(5) aoi(5) aoi(5) aoi(5) aoi(5)],'Color','g','LineWidth',4); 
 h1_back = plot3([aoi(2) aoi(2) aoi(2) aoi(2) aoi(2)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','b','LineWidth',3); 
 h1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)],[aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(6) aoi(6) aoi(6) aoi(6) aoi(6)],'Color','y','LineWidth',2); 
-h2 = plot3(x_orig,y_orig,z_orig, '.','MarkerSize',max_room_size*0.1,'Color','r','LineWidth',2); 
+h2 = plot3(x_orig,y_orig,z_orig, '.','MarkerSize',25,'Color','r'); 
 xlabel(['X-Axis (cm)']); 
 ylabel(['Y-Axis (cm)']); 
 zlabel(['Z-Axis (cm)']); 
@@ -569,7 +569,7 @@ end
 xlim([aoi(1)-10,aoi(2)+10]);
 ylim([aoi(3)-10,aoi(4)+10]);
 zlim([aoi(5)-10,aoi(6)+10]);
-view(180,0)
+view(0,0)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%  User Defined Bisector Reference Point  %%%%%%%%%%%%%%%%%%

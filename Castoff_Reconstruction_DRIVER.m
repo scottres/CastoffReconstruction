@@ -159,18 +159,18 @@ room_dim = xlsread(drive_data,'B1:B3');
 room_length=room_dim(1);
 room_width=room_dim(2);
 room_height=room_dim(3);
-x = xlsread(drive_data,strcat('D2:D',num2str(num_ref))); %Import X-coordinate Locations in cm
-y = xlsread(drive_data,strcat('E2:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
-z = xlsread(drive_data,strcat('F2:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
+x = xlsread(drive_data,strcat('D5:D',num2str(num_ref))); %Import X-coordinate Locations in cm
+y = xlsread(drive_data,strcat('E5:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
+z = xlsread(drive_data,strcat('F5:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
 
 x(any(x==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 y(any(y==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 z(any(z==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
-lngth = xlsread(drive_data,strcat('H2:H',num2str(num_ref))); %Import Major Axis of Stains in mm
-minor = xlsread(drive_data,strcat('I2:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
-alpha = xlsread(drive_data,strcat('J2:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
+lngth = xlsread(drive_data,strcat('H5:H',num2str(num_ref))); %Import Major Axis of Stains in mm
+minor = xlsread(drive_data,strcat('I5:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
+alpha = xlsread(drive_data,strcat('J5:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
 alpha(any(alpha==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
-gamma = xlsread(drive_data,strcat('L2:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
+gamma = xlsread(drive_data,strcat('L5:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
 gamma(any(gamma==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 gamma = mod(gamma,(2*pi)); %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
 

@@ -632,7 +632,7 @@ clstr_comb(:,any(diff(sort(clstr_comb,1),[],1)==0,1))=[]; %Remove Repeated Combi
 [~,iclstr,~] = unique(sort(clstr_comb',2),'rows'); %Determine Repeated Permutations
 clstr_comb = clstr_comb(:,sort(iclstr))'; %Remove Repeated Permutations
 
-clstr_num = length(clstr_comb); %Number of Clusters
+clstr_num = size(clstr_comb,1); %Number of Clusters
 
 if user_clstr == 1;
     clstr_num = size(stain_cluster,1); %Determine Number of Clusters from User Defined Clusters for Analysis

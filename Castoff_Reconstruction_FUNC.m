@@ -240,21 +240,22 @@ z_ref = Refu(3); %Select Z-coordinate of User Defined Reference Point
 %Select Trajectories
 xi = combvec(x_cs1', x_cs1')'; %Compiling All Possible Trajectory Initial X-Coordinate Combinations and Purmutations
 zi = combvec(z_cs1', z_cs1')'; %Compiling All Possible Trajectory Initial Z-Coordinate Combinations and Purmutations
-zi(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
+idb = any(diff(sort([xi zi],2),[],2)==0,2);
+zi(idb,:)=[]; %Remove Repeated Combinations
 xf = combvec(x_cs2', x_cs2')'; %Compiling All Possible Trajectory Final X-Coordinate Combinations and Purmutations
-xf(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
+xf(idb,:)=[]; %Remove Repeated Combinations
 zf = combvec(z_cs2', z_cs2')'; %Compiling All Possible Trajectory Final Z-Coordinate Combinations and Purmutations
-zf(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
+zf(idb,:)=[]; %Remove Repeated Combinations
 Alpha = combvec(alpha',alpha')'; %Compiling All Possible Alpha Combinations and Purmutations
 Minor = combvec(minor',minor')'; %Compiling All Possible Minor Axes Combinations and Purmutations
 Face = combvec(face',face')'; %Compiling All Possible Face Combinations and Purmutations
 V = combvec(v',v')'; %Compiling All Possible Vector Combinations and Purmutations
-V(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
-Face(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
-Alpha(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
-Minor(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
-xi(any(diff(sort(xi,2),[],2)==0,2),:)=[]; %Remove Repeated Combinations
-[~,ida] = unique(sort(xi,2),'rows'); %Remove Repeated Purmutations
+V(idb,:)=[]; %Remove Repeated Combinations
+Face(idb,:)=[]; %Remove Repeated Combinations
+Alpha(idb,:)=[]; %Remove Repeated Combinations
+Minor(idb,:)=[]; %Remove Repeated Combinations
+xi(idb,:)=[]; %Remove Repeated Combinations
+[~,ida] = unique(sort([xi zi],2),'rows'); %Remove Repeated Purmutations
 xi = xi(sort(ida),:); %Remove Repeated Purmutations
 V = V(sort(ida),:); %Remove Repeated Purmutations
 Face = Face(sort(ida),:); %Remove Repeated Purmutations
@@ -462,7 +463,7 @@ bisect1 = Bisect12(:,1:4); %Breakup Vector into Initial Components
 bisect2 = Bisect12(:,5:8); %Breakup Vector into Final Components
 
 %Iterating through all Intersecting Bisector Angles to Determine Center Coordinate Locations
-for jjj = 1:numstains
+for jjj = 1:size(Bisect12,1)
     lineSegmentIntersect(bisect1(jjj,:),bisect2(jjj,:)); %Function Determining the Intersection Points of Adjacent (1 to 2) & Every Other traj_shift (2 to 3) Bisecting Angles
     XintB12(jjj,:) = ans.intMatrixX; %X-Coordinate Location Results Vector from Intersection of Adjacent (1 to 2) & Every Other traj_shift (2 to 3) Bisecting Angles
     ZintB12(jjj,:) = ans.intMatrixY; %Z-Coordinate Location Results Vector from Intersection of Adjacent (1 to 2) & Every Other traj_shift (2 to 3) Bisecting Angles
@@ -588,7 +589,7 @@ numstains = length(BB); %Revaluating Variable
 % for sec = 1:numstains
 %     point = [BB(sec) CC(sec)]; %Define Point
 %     intcpt = point(2) - perp_m(sec).*point(1); %Calculate z-azis intercept
-%     xvct = point(1)-Direction(1):point(1)+Direction(3); %X Vector for Tangent
+%     xvct = point(1)-Direction(1):point(1)+Direction(3); %Â‘XÂ’ Vector for Tangent
 %     tngt = perp_m(sec).*xvct + intcpt; %Calculate Z points
 %     xvct_1(sec,:) = xvct;
 %     tngt_1(sec,:) = tngt; %calculate Z points

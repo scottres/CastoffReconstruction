@@ -163,16 +163,17 @@ x = xlsread(drive_data,strcat('D5:D',num2str(num_ref))); %Import X-coordinate Lo
 y = xlsread(drive_data,strcat('E5:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
 z = xlsread(drive_data,strcat('F5:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
 
-x(any(x==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
-y(any(y==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
-z(any(z==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
+x(any(x==0,2))=1e-10; %Replace All Zeros with Near Zero Number
+y(any(y==0,2))=1e-10; %Replace All Zeros with Near Zero Number
+z(any(z==0,2))=1e-10; %Replace All Zeros with Near Zero Number
 lngth = xlsread(drive_data,strcat('H5:H',num2str(num_ref))); %Import Major Axis of Stains in mm
 minor = xlsread(drive_data,strcat('I5:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
 alpha = xlsread(drive_data,strcat('J5:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
-alpha(any(alpha==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
+alpha(any(alpha==0,2))=1e-10; %Replace All Zeros with Near Zero Number
 gamma = xlsread(drive_data,strcat('L5:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
-gamma(any(gamma==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 gamma = mod(gamma,(2*pi)); %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
+gamma(any(gamma==0,2))=1e-10; %Replace All Zeros with Near Zero Number
+gamma(any(gamma==pi,2))=pi+1e-10; %Replace All Zeros with Near Zero Number
 
 % for ia = 1:length(gamma)
 %     beta(ia) = atan(tan(alpha(ia))/sin(gamma(ia))); %Calculate Beta Yawing Impact Angle
@@ -316,7 +317,7 @@ end
 beta(any(beta==0,2))=0.00000000001; %Replace All Zeros with Near Zero Number
 
 for i = 1:length(gamma)
-   alpha_p(i,:) = abs(atan(tan(beta(i))/tan(gamma(i)))); %Alpha Impact Angle Projected onto XZ-plane for 2D Analysis
+   alpha_p(i,:) = abs(atan(tan(alpha(i))/cos(gamma(i)))); %Alpha Impact Angle Projected onto XZ-plane for 2D Analysis
 end
 
 if any(surf1(:))==0
@@ -478,24 +479,24 @@ rmvnan(rmvnan==0) = NaN; %Prjected Alpha Corrections
 %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
 for k = 1:numstains
     if alpha_p<0
-        if 0<=k & k<=int_s1
+        if face(k) == 1;
             alpha_pg(k,:) = pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif int_s1<k & k<=(int_s1+int_s2)
+        elseif face(k) == 2;
             alpha_pg(k,:) = 0.5*pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif (int_s1+int_s2)<k & k<=(int_s1+int_s2+int_s3)
-            alpha_pg(k,:) = abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif (int_s1+int_s2+int_s3)<k & k<=(int_s1+int_s2+int_s3+int_s4)
-            alpha_pg(k,:) = 0.5*3*pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
+        elseif face(k) == 3;
+            alpha_pg(k,:) = pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
+        elseif face(k) == 4;
+            alpha_pg(k,:) = 0.5*pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
         end
     else
-        if 0<=k & k<=int_s1
+        if face(k) == 1;
             alpha_pg(k,:) = 2*pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif int_s1<k & k<=(int_s1+int_s2)
+        elseif face(k) == 2;
             alpha_pg(k,:) = 0.5*3*pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif (int_s1+int_s2)<k & k<=(int_s1+int_s2+int_s3)
+        elseif face(k) == 3;
             alpha_pg(k,:) = pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif (int_s1+int_s2+int_s3)<k & k<=(int_s1+int_s2+int_s3+int_s4)
-            alpha_pg(k,:) = 0.5*pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
+        elseif face(k) == 4;
+            alpha_pg(k,:) = abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
         end
     end
 end

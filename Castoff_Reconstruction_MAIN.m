@@ -132,7 +132,7 @@ warning on verbose
 tic()
 
 percentiles = [0.95 0.80 0.65]; %Choose Resultant Product Distribution Percentiles for Plotting (this can be change when replotting the final figure (Figure 4)
-data = 'Ink_Trial_DRIVER.mat';
+data = 'stain Scott3_DRIVER.mat';
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 datamat = regexprep(data,'_DRIVER','','ignorecase'); %Change .mat name for Saving Results
 dlmwrite(regexprep(datamat,'.mat','_OUTPUT.txt'),[]); %Create Output .txt-file
@@ -150,7 +150,7 @@ alpha_clstr = 0; %Set Equal to '1' to Cluster by Half Global Alpha Impact Angle,
 clstr_alpha = [1*pi/180:2*pi/180:115*pi/180]';%[20*pi/180; 30*pi/180]; %Select Difference in Half Global Alpha Impact Angle for Clustering in radians
 alpha_std = 1*pi/180; %Select Standard Deviation of Difference in Half Global Alpha Impact Angle for Clustering in radians
 
-dist_clstr = 1; %Set Equal to '1' to Cluster by Distance between Stains, Set Equal to '0' for another Cluster Option
+dist_clstr = 0; %Set Equal to '1' to Cluster by Distance between Stains, Set Equal to '0' for another Cluster Option
 clstr_dist = 25;%[2:4:100]'; %Select Distance between Stains for Clustering in centimeters
 dist_std = 5; %Select Standard Deviation of Distance between Stains for Clustering in centimeters
 
@@ -329,12 +329,12 @@ numstains_orig = numstains; %Save Original Number of Stains
 xi1 = 1; %Starting Stain Index
 xij(1,:) = xi1; %Stain Iterative Index
 opti_dist = mean(mean(sqrt(sum(diff([Xs Ys Zs],1,1).^2,2)),1),2); %Average Distance between Adjacent Stains (if stains are not inputted in consecutive order this will not be accurate and less stains will be selected for analysis)
-% opti_dist = opti_dist*0.25; %Manually Selected Distance between Adjacent Stains (if stains are not inputted in consecutive order this will not be accurate and less stains will be selected for analysis)
+% opti_dist = 1; %opti_dist*0.25; %Manually Selected Distance between Adjacent Stains (if stains are not inputted in consecutive order this will not be accurate and less stains will be selected for analysis)
 
 %Select Stains Equally Spaced by 'opti_dist' Distance between Stains
 while xi1 < numstains; % && (xi1+25) <= (numstains-1);
-    if (xi1+25) < numstains; %Iterating through the next 25 consecutive stains to prevent Skipping over sections of stains (when cast-off spatter patterns pass by one another or intersect)
-        xnums = xi1+25;
+    if (xi1+floor(numstains/3)) < numstains; %Iterating through the next floor(numstains/3) consecutive stains to prevent Skipping over sections of stains (when cast-off spatter patterns pass by one another or intersect)
+        xnums = xi1+floor(numstains/3);
     else
         xnums = numstains-1;
     end
@@ -845,13 +845,13 @@ for iq = 1:comb_num;
         else
             if alpha_clstr == 1 || dist_clstr == 1;
                 B = Comb_mat; %Cluster Stain Indices
-            elseif dwn_samp_stains == 1;
+            elseif dwn_samp_stains == 1 && opti_space ~= 1;
                 B(ip,:) = ((1:dwnsamp:sampsize*dwnsamp))+(A-overlap)*(ip-1); %Equation Defining Relationship between dwnsamp, sampsize, and overlap for i>1
             else
                 B = clstr_comb; %Equation Defining Relationship between dwnsamp, sampsize, and overlap for i>1
             end
         end
-        V = Vn(B(ip,:),:); %Clustered Velocity Vector
+        V = v(B(ip,:),:); %Clustered Velocity Vector
         XS = Xs(B(ip,:),:); %Clustered X-coordinate of Stain Location (with Gravity and Drag Contributions if Selected)
         YS = Ys(B(ip,:),:); %Clustered Y-coordinate of Stain Location (with Gravity and Drag Contributions if Selected)
         ZS = Zs(B(ip,:),:); %Clustered Z-coordinate of Stain Location (with Gravity and Drag Contributions if Selected)

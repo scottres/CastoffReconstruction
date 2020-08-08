@@ -333,8 +333,8 @@ opti_dist = mean(mean(sqrt(sum(diff([Xs Ys Zs],1,1).^2,2)),1),2); %Average Dista
 
 %Select Stains Equally Spaced by 'opti_dist' Distance between Stains
 while xi1 < numstains; % && (xi1+25) <= (numstains-1);
-    if (xi1+floor(numstains/3)) < numstains; %Iterating through the next floor(numstains/3) consecutive stains to prevent Skipping over sections of stains (when cast-off spatter patterns pass by one another or intersect)
-        xnums = xi1+floor(numstains/3);
+    if (xi1+floor(numstains/3))-1 < numstains; %Iterating through the next floor(numstains/3)-1 consecutive stains to prevent Skipping over sections of stains (when cast-off spatter patterns pass by one another or intersect)
+        xnums = xi1+floor(numstains/3)-1;
     else
         xnums = numstains-1;
     end

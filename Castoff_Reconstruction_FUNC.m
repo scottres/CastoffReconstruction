@@ -342,13 +342,13 @@ for trj = 1:size(ABx,1)
     elseif inDA(trj) == 1
         endpts(trj,:) = [D12(trj,:),A12(trj,:)]; %Select Bisector from Single Bisector Triangle Combination Containing Reference Point
     else
-        Psi_tot = zeros(size(isocubes)); %End Iteration if Cluster is Empty
-        ind = NaN;
-        return
+        endpts(trj,:) = zeros(size([D12(trj,:),A12(trj,:)]));
     end
 end
 
-if nnz(endpts(:,1)) <= 2
+
+
+if nnz(endpts(:,1)) < 2
     Psi_tot = zeros(size(isocubes)); %End Iteration if Cluster is Empty
     ind = NaN;
     return
@@ -475,7 +475,7 @@ if exist('XintB12') == 0
     return
 end
 
-if nnz(XintB12) <= 2
+if nnz(XintB12) < 1
     Psi_tot = zeros(size(isocubes)); %End Iteration if Cluster is Empty
     ind = NaN;
     return
@@ -1095,8 +1095,12 @@ end;
 % end
 Lengths = [res,res,res];
 for noah = 1:numstains
-    Arcp = (R2*[x_arc(noah,:); y_arc(noah,:); z_arc(noah,:)])'+[Xp(1).*ones(size(x_arc,2),1) Xp(2).*ones(size(x_arc,2),1) Xp(3).*ones(size(x_arc,2),1)];
-    Arc(:,:,noah) = Arcp;
+  if phi1 == 0;
+     Arcp = [x_arc(noah,:); y_arc(noah,:); z_arc(noah,:)]'+[Xp(1).*ones(size(x_arc,2),1) Xp(2).*ones(size(x_arc,2),1) Xp(3).*ones(size(x_arc,2),1)];
+  else
+     Arcp = (R2*[x_arc(noah,:); y_arc(noah,:); z_arc(noah,:)])'+[Xp(1).*ones(size(x_arc,2),1) Xp(2).*ones(size(x_arc,2),1) Xp(3).*ones(size(x_arc,2),1)];
+  end
+     Arc(:,:,noah) = Arcp;
         h19 = plot3(Arcp(:,1),Arcp(:,2),Arcp(:,3),'LineWidth',5,'Color','r');
     for cu = 1:size(theta,2)
         if aoi(1)<=Arcp(cu,1) && Arcp(cu,1)<=aoi(2) && aoi(3)<=Arcp(cu,2) && Arcp(cu,2)<=aoi(4) && aoi(5)<=Arcp(cu,3) && Arcp(cu,3)<=aoi(6)

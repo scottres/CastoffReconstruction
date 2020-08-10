@@ -869,10 +869,15 @@ for iq = 1:comb_num;
         E_t = e_t(B(ip,:),:); %Clustered Tangential Vectors
         E_nxt = e_nxt(B(ip,:),:); %Clustered Normal x Tangential Vectors
         [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num); %Function Determining Castoff Reconstruction
-        figure(3);
-        hold on;
-        plot3(xs(B(ip,:)),ys(B(ip,:)),zs(B(ip,:)),'.','MarkerSize',max_room_size*0.1,'Color','g','LineWidth',2);
-        quiver3(xs(B(ip,:)),ys(B(ip,:)),zs(B(ip,:)),v(B(ip,:),1),v(B(ip,:),2),v(B(ip,:),3),'Color','g');
+        if ishandle(3)
+          figure(3);
+          hold on;
+          plot3(xs(B(ip,:)),ys(B(ip,:)),zs(B(ip,:)),'.','MarkerSize',max_room_size*0.1,'Color','g','LineWidth',2);
+          quiver3(xs(B(ip,:)),ys(B(ip,:)),zs(B(ip,:)),v(B(ip,:),1),v(B(ip,:),2),v(B(ip,:),3),'Color','g');
+          xlim([aoi(1)-10,aoi(2)+10]);
+          ylim([aoi(3)-10,aoi(4)+10]);
+          zlim([aoi(5)-10,aoi(6)+10]);
+        end
 
         V_s(ip,:,:) = V;
         X_S(ip,:) = XS';
@@ -900,7 +905,8 @@ for iq = 1:comb_num;
                 isocubes = isocubes.*Weight; %Multiply PDF Distribution for Remaining Iterations
             end
         end
-    
+        ip
+    min(isocubes)
     if ip == 1;
         NUM_clstr = clstr_num; %Count Initial PDF Distribution
     else
@@ -908,14 +914,7 @@ for iq = 1:comb_num;
             NUM_clstr = NUM_clstr - 1; %Skip PDF Distributions of All Zeros
         end
     end
-    
-    end
-
-    figure(3);
-    hold off;
-    xlim([aoi(1)-10,aoi(2)+10]);
-    ylim([aoi(3)-10,aoi(4)+10]);
-    zlim([aoi(5)-10,aoi(6)+10]);
+  end
     
 %     if (dwn_samp_stains == 1 && (dist_clstr == 1 || alpha_clstr == 1)) == 1;
 %         results{iq,1} = [DIST_12{:,:,iq} DIST_23{:,:,iq} DIST_13{:,:,iq}]; %Save Results
@@ -934,6 +933,8 @@ for iq = 1:comb_num;
 %     results{iq,7} = Alpha_ORIG; %Save Results
 %     results{iq,8} = GammA; %Save Results
 %     results{iq,9} = FacE; %Save Results
+   
+   hold off;
    
     clearvars V_s X_S Y_S Z_S X_s Y_s Z_s AlphA Alpha_PG Alpha_ORIG GammA FacE cgrade %Remove Variables to avoid Overwriting Errors
     

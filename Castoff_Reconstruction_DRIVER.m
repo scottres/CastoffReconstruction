@@ -240,7 +240,7 @@ max_room_size = max(room_size); %Maximum Room Dimension for Scaling Purposes
 min_room_size = min(room_size); %Minimum Room Dimension for Scaling Purposes
 
 Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
-Spread_Fact_theta = pi/180; %Spreading Factor %Uncertainty in In-plane Angle (Theta) in radians
+Spread_Fact_theta = 20*pi/180; %Spreading Factor %Uncertainty in In-plane Angle (Theta) in radians
 Spread_Fact_upsilon = 20*pi/180; %Spreading Factor %Uncertainty in Off-plane Angle (Upsilon) in radians
 
 dwnsamp = 4; %Select Stain Cluster Sample Rate by Integer Factor; Enter '1' if Clustering Adjacent Stains

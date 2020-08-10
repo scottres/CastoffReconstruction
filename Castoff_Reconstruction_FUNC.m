@@ -1057,42 +1057,98 @@ sig_n = 2;
 Psi_tot(any(Psi_tot<(max(Psi_tot)*exp(-0.5*(sig_n^2))),2)) = max(Psi_tot)*exp(-0.5*(sig_n^2));
 
 %Plot Room Dimensions, Stains, and Stain Trajectories
-figure(3)
-hold on
-grid on
-h1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','c','LineWidth',5); %Plot Front Surface Dimensions
-h1_downward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(5) aoi(5) aoi(5) aoi(5) aoi(5)],'Color','g','LineWidth',4); %Plot Downward Surface Dimensions
-h1_back = plot3([aoi(2) aoi(2) aoi(2) aoi(2) aoi(2)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','b','LineWidth',3); %Plot Back Surface Dimensions
-h1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(6) aoi(6) aoi(6) aoi(6) aoi(6)],'Color','y','LineWidth',2); %Plot Downward Surface Dimensions
-h2 = plot3(Xs,Ys,Zs, '.','MarkerSize',max_room_size*0.1,'Color','r','LineWidth',2); %Plot XYZ Stains
-title(['Cast-off Center & Radius of Origin: ',num2str(ip), ' of ', num2str(clstr_num(iq)),' (', num2str(iq), '/', num2str(comb_num),')'])
-xlabel(['X-Axis (cm)'])
-ylabel(['Y-Axis (cm)'])
-zlabel(['Z-Axis (cm)'])
-view([Sn])
-h3 = quiver3(Xs,Ys,Zs,v(:,1),v(:,2),v(:,3),'Color','r');
-h4 = plot3(Xp(1),Xp(2),Xp(3),'.','MarkerSize',25,'Color','b');
-h5 = quiver3(Xp(1),Xp(2),Xp(3),Sn(1)*25,Sn(2)*25,Sn(3)*25,'Color','b');
-h6 = surf(Sx,Sy,Sz,'FaceAlpha',0.2,'EdgeAlpha',0.2); %Plot the Resulting Plane
-% h7 = plot3(XYZp(:,1),XYZp(:,2),XYZp(:,3),'.','MarkerSize',25,'Color','g');
-% h8 = quiver3(XYZp(:,1),XYZp(:,2),XYZp(:,3),Vp(:,1),Vp(:,2),Vp(:,3),'Color','g');
-% h9 = plot3(XYZp(:,1),XYZp(:,2),XYZp(:,3),'.','MarkerSize',25,'Color','m');
-% h10 = quiver3(XYZp(:,1),XYZp(:,2),XYZp(:,3),Vu(:,1),Vu(:,2),Vu(:,3),'Color','m');
-for ref1 = 1:numstains;
-    h11(ref1) = plot3([(Xs(ref1)-10000*v(ref1,1)) (Xs(ref1)+10000*v(ref1,1))],[(Ys(ref1)-10000*v(ref1,2)) (Ys(ref1)+10000*v(ref1,2))],[(Zs(ref1)-10000*v(ref1,3)) (Zs(ref1)+10000*v(ref1,3))],'Color','r','LineWidth',1);
-end;
-% h12 = plot3(Intp(:,1),Intp(:,2),Intp(:,3),'.','MarkerSize',max_room_size*0.05,'Color','b','LineWidth',2); %Plot All Trajectory Intersection Points for Refernce
-% h13 = plot3(Finp(:,1),Finp(:,2),Finp(:,3),':r','LineWidth',3); %Plot Resultant Cast-off Circle
-% h14 = plot3(centerp(1),centerp(2),centerp(3),'*','MarkerSize',10,'Color','r','LineWidth',3); %Plot Resultant Cast-off Center Location
-% h15 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
-% h16 = plot3(actual_x,actual_y,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
-% for bsct = 1:size(px2,2)
-%     h17(bsct) = plot3([pp(bsct,1),bppos12(bsct,1)+pp(bsct,1)],[pp(bsct,2),bppos12(bsct,2)],[pp(bsct,3),bppos12(bsct,3)+pp(bsct,3)],'Color','k','LineWidth',1); %Plotting Selected Trajectories Bisector Angle Vectors for Referencing (+)
-% end
-% h18 = plot3(XintB12(1:end), zeros(size(XintB12)), ZintB12(1:end),'.','MarkerSize',10,'Color','g','LineWidth',3); %Plot Bisector Intersections
-% for ref1 = 1:size(XYZp)
-%     plot3([(XYZu(ref1,1)-1000*v(ref1,1)) (XYZu(ref1,1)+1000*v(ref1,1))],[(XYZu(ref1,2)-1000*v(ref1,2)) (XYZu(ref1,2)+1000*v(ref1,2))],[(XYZu(ref1,3)-1000*v(ref1,3)) (XYZu(ref1,3)+1000*v(ref1,3))],'Color','red');
-% end
+if ishandle(3)
+      figure(3)
+%   hold on
+%   grid on
+%   h1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','c','LineWidth',5); %Plot Front Surface Dimensions
+%   h1_downward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(5) aoi(5) aoi(5) aoi(5) aoi(5)],'Color','g','LineWidth',4); %Plot Downward Surface Dimensions
+%   h1_back = plot3([aoi(2) aoi(2) aoi(2) aoi(2) aoi(2)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','b','LineWidth',3); %Plot Back Surface Dimensions
+%   h1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(6) aoi(6) aoi(6) aoi(6) aoi(6)],'Color','y','LineWidth',2); %Plot Downward Surface Dimensions
+%   h2 = plot3(Xs,Ys,Zs, '.','MarkerSize',max_room_size*0.1,'Color','r','LineWidth',2); %Plot XYZ Stains
+   title(['Cast-off Center & Radius of Origin: ',num2str(ip), ' of ', num2str(clstr_num(iq)),' (', num2str(iq), '/', num2str(comb_num),')'])
+%   xlabel(['X-Axis (cm)'])
+%   ylabel(['Y-Axis (cm)'])
+%   zlabel(['Z-Axis (cm)'])
+  view([Sn])
+  h3 = quiver3(Xs,Ys,Zs,v(:,1),v(:,2),v(:,3),'Color','r');
+  h4 = plot3(Xp(1),Xp(2),Xp(3),'.','MarkerSize',25,'Color','b');
+  h5 = quiver3(Xp(1),Xp(2),Xp(3),Sn(1)*25,Sn(2)*25,Sn(3)*25,'Color','b');
+  h6 = surf(Sx,Sy,Sz,'FaceAlpha',0.2,'EdgeAlpha',0.2); %Plot the Resulting Plane
+  % h7 = plot3(XYZp(:,1),XYZp(:,2),XYZp(:,3),'.','MarkerSize',25,'Color','g');
+  % h8 = quiver3(XYZp(:,1),XYZp(:,2),XYZp(:,3),Vp(:,1),Vp(:,2),Vp(:,3),'Color','g');
+  % h9 = plot3(XYZp(:,1),XYZp(:,2),XYZp(:,3),'.','MarkerSize',25,'Color','m');
+  % h10 = quiver3(XYZp(:,1),XYZp(:,2),XYZp(:,3),Vu(:,1),Vu(:,2),Vu(:,3),'Color','m');
+  for ref1 = 1:numstains;
+      h11(ref1) = plot3([(Xs(ref1)-10000*v(ref1,1)) (Xs(ref1)+10000*v(ref1,1))],[(Ys(ref1)-10000*v(ref1,2)) (Ys(ref1)+10000*v(ref1,2))],[(Zs(ref1)-10000*v(ref1,3)) (Zs(ref1)+10000*v(ref1,3))],'Color','r','LineWidth',1);
+  end;
+  % h12 = plot3(Intp(:,1),Intp(:,2),Intp(:,3),'.','MarkerSize',max_room_size*0.05,'Color','b','LineWidth',2); %Plot All Trajectory Intersection Points for Refernce
+  % h13 = plot3(Finp(:,1),Finp(:,2),Finp(:,3),':r','LineWidth',3); %Plot Resultant Cast-off Circle
+  % h14 = plot3(centerp(1),centerp(2),centerp(3),'*','MarkerSize',10,'Color','r','LineWidth',3); %Plot Resultant Cast-off Center Location
+  % h15 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
+  % h16 = plot3(actual_x,actual_y,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
+  % for bsct = 1:size(px2,2)
+  %     h17(bsct) = plot3([pp(bsct,1),bppos12(bsct,1)+pp(bsct,1)],[pp(bsct,2),bppos12(bsct,2)],[pp(bsct,3),bppos12(bsct,3)+pp(bsct,3)],'Color','k','LineWidth',1); %Plotting Selected Trajectories Bisector Angle Vectors for Referencing (+)
+  % end
+  % h18 = plot3(XintB12(1:end), zeros(size(XintB12)), ZintB12(1:end),'.','MarkerSize',10,'Color','g','LineWidth',3); %Plot Bisector Intersections
+  % for ref1 = 1:size(XYZp)
+  %     plot3([(XYZu(ref1,1)-1000*v(ref1,1)) (XYZu(ref1,1)+1000*v(ref1,1))],[(XYZu(ref1,2)-1000*v(ref1,2)) (XYZu(ref1,2)+1000*v(ref1,2))],[(XYZu(ref1,3)-1000*v(ref1,3)) (XYZu(ref1,3)+1000*v(ref1,3))],'Color','red');
+  % end
+%   h = [h1_front h1_downward h1_back h1_upward h2 h3 h4 h5 h6]; % h7 h8 h9 h10 h11 h12 h13 h14 h15 h16 h17 h19
+%   legend(h, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Point Closest to Clustered Stains','Normal Vector Minimizing nxv','Clustered Plane', 'Location', 'northeastoutside'); % h7:'Stains Projected onto Clustered Plane', h8:'Stain Velocity Vectors Projected onto Clustered Plane', 'Stain Trajectories Projected to Clustered Plane', h9:'Clustered Stain Projections Rotated to XZ-Plane', h10:'Clustered Stain Velocity Vectors Rotated to XZ-Plane', h11:'Stain Trajectory Intersection Points', h13:'Resultant Cast-off Circle', h14:'Resultant Cast-off Center Location', h15:'Actual Cast-off Circle', h16:'Actual Cast-off Center Location', h17:'Stain Trajectory Bisector Vectors', h19:'Resultant Cast-off Arc' 
+%   xlim([aoi(1)-10,aoi(2)+10]);
+%   ylim([aoi(3)-10,aoi(4)+10]);
+%   zlim([aoi(5)-10,aoi(6)+10]);
+%   set(gca,'FontSize',20);
+%   axis equal;
+  % set(gcf, 'Position', get(0, 'Screensize')); %Make Figure Full-screen
+else
+  figure(3)
+  hold on
+  grid on
+  h1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','c','LineWidth',5); %Plot Front Surface Dimensions
+  h1_downward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(5) aoi(5) aoi(5) aoi(5) aoi(5)],'Color','g','LineWidth',4); %Plot Downward Surface Dimensions
+  h1_back = plot3([aoi(2) aoi(2) aoi(2) aoi(2) aoi(2)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','b','LineWidth',3); %Plot Back Surface Dimensions
+  h1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(6) aoi(6) aoi(6) aoi(6) aoi(6)],'Color','y','LineWidth',2); %Plot Downward Surface Dimensions
+  h2 = plot3(Xs,Ys,Zs, '.','MarkerSize',max_room_size*0.1,'Color','r','LineWidth',2); %Plot XYZ Stains
+  title(['Cast-off Center & Radius of Origin: ',num2str(ip), ' of ', num2str(clstr_num(iq)),' (', num2str(iq), '/', num2str(comb_num),')'])
+  xlabel(['X-Axis (cm)'])
+  ylabel(['Y-Axis (cm)'])
+  zlabel(['Z-Axis (cm)'])
+  view([Sn])
+  h3 = quiver3(Xs,Ys,Zs,v(:,1),v(:,2),v(:,3),'Color','r');
+  h4 = plot3(Xp(1),Xp(2),Xp(3),'.','MarkerSize',25,'Color','b');
+  h5 = quiver3(Xp(1),Xp(2),Xp(3),Sn(1)*25,Sn(2)*25,Sn(3)*25,'Color','b');
+  h6 = surf(Sx,Sy,Sz,'FaceAlpha',0.2,'EdgeAlpha',0.2); %Plot the Resulting Plane
+  % h7 = plot3(XYZp(:,1),XYZp(:,2),XYZp(:,3),'.','MarkerSize',25,'Color','g');
+  % h8 = quiver3(XYZp(:,1),XYZp(:,2),XYZp(:,3),Vp(:,1),Vp(:,2),Vp(:,3),'Color','g');
+  % h9 = plot3(XYZp(:,1),XYZp(:,2),XYZp(:,3),'.','MarkerSize',25,'Color','m');
+  % h10 = quiver3(XYZp(:,1),XYZp(:,2),XYZp(:,3),Vu(:,1),Vu(:,2),Vu(:,3),'Color','m');
+  for ref1 = 1:numstains;
+      h11(ref1) = plot3([(Xs(ref1)-10000*v(ref1,1)) (Xs(ref1)+10000*v(ref1,1))],[(Ys(ref1)-10000*v(ref1,2)) (Ys(ref1)+10000*v(ref1,2))],[(Zs(ref1)-10000*v(ref1,3)) (Zs(ref1)+10000*v(ref1,3))],'Color','r','LineWidth',1);
+  end;
+  % h12 = plot3(Intp(:,1),Intp(:,2),Intp(:,3),'.','MarkerSize',max_room_size*0.05,'Color','b','LineWidth',2); %Plot All Trajectory Intersection Points for Refernce
+  % h13 = plot3(Finp(:,1),Finp(:,2),Finp(:,3),':r','LineWidth',3); %Plot Resultant Cast-off Circle
+  % h14 = plot3(centerp(1),centerp(2),centerp(3),'*','MarkerSize',10,'Color','r','LineWidth',3); %Plot Resultant Cast-off Center Location
+  % h15 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
+  % h16 = plot3(actual_x,actual_y,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
+  % for bsct = 1:size(px2,2)
+  %     h17(bsct) = plot3([pp(bsct,1),bppos12(bsct,1)+pp(bsct,1)],[pp(bsct,2),bppos12(bsct,2)],[pp(bsct,3),bppos12(bsct,3)+pp(bsct,3)],'Color','k','LineWidth',1); %Plotting Selected Trajectories Bisector Angle Vectors for Referencing (+)
+  % end
+  % h18 = plot3(XintB12(1:end), zeros(size(XintB12)), ZintB12(1:end),'.','MarkerSize',10,'Color','g','LineWidth',3); %Plot Bisector Intersections
+  % for ref1 = 1:size(XYZp)
+  %     plot3([(XYZu(ref1,1)-1000*v(ref1,1)) (XYZu(ref1,1)+1000*v(ref1,1))],[(XYZu(ref1,2)-1000*v(ref1,2)) (XYZu(ref1,2)+1000*v(ref1,2))],[(XYZu(ref1,3)-1000*v(ref1,3)) (XYZu(ref1,3)+1000*v(ref1,3))],'Color','red');
+  % end
+  h = [h1_front h1_downward h1_back h1_upward h2 h3 h4 h5 h6]; % h7 h8 h9 h10 h11 h12 h13 h14 h15 h16 h17 h19
+  legend(h, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Point Closest to Clustered Stains','Normal Vector Minimizing nxv','Clustered Plane', 'Location', 'northeastoutside'); % h7:'Stains Projected onto Clustered Plane', h8:'Stain Velocity Vectors Projected onto Clustered Plane', 'Stain Trajectories Projected to Clustered Plane', h9:'Clustered Stain Projections Rotated to XZ-Plane', h10:'Clustered Stain Velocity Vectors Rotated to XZ-Plane', h11:'Stain Trajectory Intersection Points', h13:'Resultant Cast-off Circle', h14:'Resultant Cast-off Center Location', h15:'Actual Cast-off Circle', h16:'Actual Cast-off Center Location', h17:'Stain Trajectory Bisector Vectors', h19:'Resultant Cast-off Arc' 
+  xlim([aoi(1)-10,aoi(2)+10]);
+  ylim([aoi(3)-10,aoi(4)+10]);
+  zlim([aoi(5)-10,aoi(6)+10]);
+  set(gca,'FontSize',20);
+  axis equal;
+  % set(gcf, 'Position', get(0, 'Screensize')); %Make Figure Full-screen
+end
+
 Lengths = [res,res,res];
 for noah = 1:numstains
   if phi1 == 0;
@@ -1115,14 +1171,6 @@ for noah = 1:numstains
     end
 %     ind(noah,:) = sub2ind([Nz Nx Ny],sub_row(noah,:),sub_col(noah,:),sub_sht(noah,:));
 end
-h = [h1_front h1_downward h1_back h1_upward h2 h3 h4 h5 h6]; % h7 h8 h9 h10 h11 h12 h13 h14 h15 h16 h17 h19
-legend(h, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Point Closest to Clustered Stains','Normal Vector Minimizing nxv','Clustered Plane', 'Location', 'northeastoutside'); % h7:'Stains Projected onto Clustered Plane', h8:'Stain Velocity Vectors Projected onto Clustered Plane', 'Stain Trajectories Projected to Clustered Plane', h9:'Clustered Stain Projections Rotated to XZ-Plane', h10:'Clustered Stain Velocity Vectors Rotated to XZ-Plane', h11:'Stain Trajectory Intersection Points', h13:'Resultant Cast-off Circle', h14:'Resultant Cast-off Center Location', h15:'Actual Cast-off Circle', h16:'Actual Cast-off Center Location', h17:'Stain Trajectory Bisector Vectors', h19:'Resultant Cast-off Arc' 
-xlim([aoi(1)-10,aoi(2)+10]);
-ylim([aoi(3)-10,aoi(4)+10]);
-zlim([aoi(5)-10,aoi(6)+10]);
-set(gca,'FontSize',20);
-axis equal;
-% set(gcf, 'Position', get(0, 'Screensize')); %Make Figure Full-screen
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%  Plot Gaussian Distributions  %%%%%%%%%%%%%%%%%%%%%

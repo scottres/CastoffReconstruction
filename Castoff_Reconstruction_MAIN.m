@@ -905,8 +905,7 @@ for iq = 1:comb_num;
                 isocubes = isocubes.*Weight; %Multiply PDF Distribution for Remaining Iterations
             end
         end
-        ip
-    min(isocubes)
+ 
     if ip == 1;
         NUM_clstr = clstr_num; %Count Initial PDF Distribution
     else

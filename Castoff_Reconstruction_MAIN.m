@@ -983,10 +983,19 @@ end;
 colorcu = {[1,0,0];[0,1,0];[0,0,1];[0,1,1]};
 transcu = [1.0 0.5 0.2 0.2 0.1 0.075 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05];
 
-if isempty(nonzeros(isonorm-ones(size(isonorm)))) == 1;
+if isempty(nonzeros(isonorm-ones(size(isonorm)))) == 1 || any(isonorm(:) <= (percentiles(1)^NUM_clstr));
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p9 p10(1)]; % p3 p4
    legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
-else
+elseif any(isonorm(:) <= (percentiles(2)^NUM_clstr));
+   p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
+   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1)]; % p3 p4
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+elseif any(isonorm(:) <= (percentiles(3)^NUM_clstr));
+   p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
+   p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)^NUM_clstr)),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
+   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p9 p10(1)]; % p3 p4
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+else   
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)^NUM_clstr)),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
    p7 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(3)^NUM_clstr)),'FaceColor',cell2mat(colorcu(3)),'EdgeAlpha',transcu(4),'FaceAlpha',transcu(3));

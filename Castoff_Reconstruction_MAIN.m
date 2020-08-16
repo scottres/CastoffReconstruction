@@ -131,8 +131,21 @@ warning on verbose
 
 tic()
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%  User Defined Values  %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
+Spread_Fact_theta = 20*pi/180; %Spreading Factor %Uncertainty in In-plane Angle (Theta) in radians
+Spread_Fact_upsilon = 20*pi/180; %Spreading Factor %Uncertainty in Off-plane Angle (Upsilon) in radians
+sig_n = 2;
 percentiles = [0.95 0.80 0.65]; %Choose Resultant Product Distribution Percentiles for Plotting (this can be change when replotting the final figure (Figure 4)
-data = 'stain Scott3_DRIVER.mat';
+data = 'Ink_Trial_DRIVER.mat';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 datamat = regexprep(data,'_DRIVER','','ignorecase'); %Change .mat name for Saving Results
 dlmwrite(regexprep(datamat,'.mat','_OUTPUT.txt'),[]); %Create Output .txt-file
@@ -793,7 +806,7 @@ if dist_clstr == 1 && dwn_samp_stains ~= 1;
 
         clstr_num(ad,:) = sum((sum(~isnan(comb_mat(:,:,ad)),2)==3),1); %Total Number of Clusters for this Clustering Method
     end
-elseif dist_clstr == 1 && dwn_samp_stains == 1;
+elseif dist_clstr == 1 || dwn_samp_stains == 1;
     for it = 1:length(dwnsamp);
         clstr_num(it,:) = ((numstains-((sampsize-1)*dwnsamp(it)))/(A(it)-overlap(it))); %Number of Clusters
         for iv = 1:clstr_num(it);
@@ -826,11 +839,11 @@ end
 results = cell(comb_num,9); %Save Results
 
 for iq = 1:comb_num;
-    if alpha_clstr == 1 || dist_clstr == 1 && dwn_samp_stains ~= 1;
+    if alpha_clstr == 1 || dist_clstr == 1;
         comb_mat_1 = comb_mat(:,1,iq); %Determine Total Number of Stains for the First Two Stains in these Clustering Methods
         comb_mat_2 = comb_mat(:,2,iq); %Determine Total Number of Stains for the Last Two Stains in these Clustering Methods
         comb_mat_3 = comb_mat(:,3,iq); %Determine Total Number of Stains for the Middle Two Stains in these Clustering Methods
-        Comb_mat{iq,:} = [comb_mat_1(~isnan(comb_mat_1(:,:))) comb_mat_2(~isnan(comb_mat_2(:,:))) comb_mat_3(~isnan(comb_mat_3(:,:)))]; %Determine Total Number of Stains for These Clustering Methods
+        Comb_mat{iq} = [comb_mat_1(~isnan(comb_mat_1(:,:))) comb_mat_2(~isnan(comb_mat_2(:,:))) comb_mat_3(~isnan(comb_mat_3(:,:)))]; %Determine Total Number of Stains for These Clustering Methods
 
         if isempty(Comb_mat{iq}) ==1; %Skip Cluster if Empty
             continue
@@ -843,7 +856,7 @@ for iq = 1:comb_num;
         if user_clstr == 1;
             B(ip,:) = stain_cluster(ip,:); %Cluster Stain Indices
         else
-            if alpha_clstr == 1 || dist_clstr == 1;
+            if alpha_clstr == 1 || dist_clstr == 1 || dwn_samp_stains == 1;
                 B = Comb_mat; %Cluster Stain Indices
             elseif dwn_samp_stains == 1 && opti_space ~= 1;
                 B(ip,:) = ((1:dwnsamp:sampsize*dwnsamp))+(A-overlap)*(ip-1); %Equation Defining Relationship between dwnsamp, sampsize, and overlap for i>1
@@ -868,7 +881,7 @@ for iq = 1:comb_num;
         E_n = e_n(B(ip,:),:); %Clustered Normal Tangential Vectors
         E_t = e_t(B(ip,:),:); %Clustered Tangential Vectors
         E_nxt = e_nxt(B(ip,:),:); %Clustered Normal x Tangential Vectors
-        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num); %Function Determining Castoff Reconstruction
+        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num,sig_n); %Function Determining Castoff Reconstruction
         if ishandle(3)
           figure(3);
           hold on;
@@ -905,7 +918,8 @@ for iq = 1:comb_num;
                 isocubes = isocubes.*Weight; %Multiply PDF Distribution for Remaining Iterations
             end
         end
- 
+        ip
+    min(isocubes)
     if ip == 1;
         NUM_clstr = clstr_num; %Count Initial PDF Distribution
     else
@@ -982,14 +996,14 @@ end;
 colorcu = {[1,0,0];[0,1,0];[0,0,1];[0,1,1]};
 transcu = [1.0 0.5 0.2 0.2 0.1 0.075 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05];
 
-if isempty(nonzeros(isonorm-ones(size(isonorm)))) == 1 || any(isonorm(:) <= (percentiles(1)^NUM_clstr));
+if isempty(nonzeros(isonorm-ones(size(isonorm)))) == 1 || ~(any(isonorm(:) < (percentiles(1)^NUM_clstr)));
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p9 p10(1)]; % p3 p4
    legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
-elseif any(isonorm(:) <= (percentiles(2)^NUM_clstr));
+elseif ~(any(isonorm(:) < (percentiles(2)^NUM_clstr)));
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1)]; % p3 p4
    legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
-elseif any(isonorm(:) <= (percentiles(3)^NUM_clstr));
+elseif ~(any(isonorm(:) < (percentiles(3)^NUM_clstr)));
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)^NUM_clstr)),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)^NUM_clstr)),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p9 p10(1)]; % p3 p4

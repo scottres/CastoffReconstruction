@@ -137,40 +137,45 @@ warning on verbose
 tic
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%  Enter Actual Center & Radius if Known  %%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-actual_x = 101;%45.72;% %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
-actual_y = 49.21;%48.3;% %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
-actual_z = 95;%89.5;% %Actual Z-Coordinate of Center Location; Enter "NaN" if Unknown
-actual_r = 70; %Actual Radius of Cast-off; Enter "NaN" if Unknown
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%  Export Data from Excel Spreadsheet  %%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-drive_data = 'Swineblood_Trial.csv';
+drive_data = 'Ink_Trial.csv';
 num_ref = xlsread(drive_data); %Read in .CSV data file
 num_ref = size(num_ref,1); %Determine Length of Columns
 drive_datamat = regexprep(drive_data,'.csv','','ignorecase'); %Change .mat name for Saving Results
 drive_datamat = strcat(drive_datamat,'_DRIVER.mat'); %Change .mat name for Saving Results
 
-room_dim = xlsread(drive_data,'B1:B3');
+% Enter Actual Center & Radius if Known
+actual_castoff = xlsread(drive_data,'B6:E6');
+if any(actual_castoff,2);
+   actual_x = actual_castoff(1); %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_y = actual_castoff(2); %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_z = actual_castoff(3); %Actual Z-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_r = actual_castoff(4); %Actual Radius of Cast-off; Enter "NaN" if Unknown
+else 
+   actual_x = NaN; %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_y = NaN; %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_z = NaN; %Actual Z-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_r = NaN; %Actual Radius of Cast-off; Enter "NaN" if Unknown
+end
+
+room_dim = xlsread(drive_data,'B3:D3');
 room_length=room_dim(1);
 room_width=room_dim(2);
 room_height=room_dim(3);
-x = xlsread(drive_data,strcat('D5:D',num2str(num_ref))); %Import X-coordinate Locations in cm
-y = xlsread(drive_data,strcat('E5:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
-z = xlsread(drive_data,strcat('F5:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
+x = xlsread(drive_data,strcat('D10:D',num2str(num_ref))); %Import X-coordinate Locations in cm
+y = xlsread(drive_data,strcat('E10:E',num2str(num_ref))); %Import Y-coordinate Locations in cm
+z = xlsread(drive_data,strcat('F10:F',num2str(num_ref))); %Import Z-coordinate Locations in cm
 
 x(any(x==0,2))=1e-10; %Replace All Zeros with Near Zero Number
 y(any(y==0,2))=1e-10; %Replace All Zeros with Near Zero Number
 z(any(z==0,2))=1e-10; %Replace All Zeros with Near Zero Number
-lngth = xlsread(drive_data,strcat('H5:H',num2str(num_ref))); %Import Major Axis of Stains in mm
-minor = xlsread(drive_data,strcat('I5:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
-alpha = xlsread(drive_data,strcat('J5:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
+lngth = xlsread(drive_data,strcat('H10:H',num2str(num_ref))); %Import Major Axis of Stains in mm
+minor = xlsread(drive_data,strcat('I10:I',num2str(num_ref))); %Import Minor Axis of Stains in mm
+alpha = xlsread(drive_data,strcat('J10:J',num2str(num_ref)))*pi/180; %Import Alpha Pitching Impact Angle
 alpha(any(alpha==0,2))=1e-10; %Replace All Zeros with Near Zero Number
-gamma = xlsread(drive_data,strcat('L5:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
+gamma = xlsread(drive_data,strcat('L10:L',num2str(num_ref)))*pi/180; %Import Gamma Glancing Impact Angle
 gamma = mod(gamma,(2*pi)); %Replace Gamma Values Greater than 2*pi Radians with Same Angle within Allotted Zero to 2pi Range
 gamma(any(gamma==0,2))=1e-10; %Replace All Zeros with Near Zero Number
 gamma(any(gamma==pi,2))=pi+1e-10; %Replace All Zeros with Near Zero Number
@@ -196,17 +201,20 @@ inclsurf_4 = 1; %Choose '1' to INCLUDE Surface #4 (Downward Surface) Stains; Cho
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Define Values  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-xmin = min(min(x),0); %0.00000000001; %Select Minimum X-coordinate for Room Assignment
-xmax = max(max(x),room_length); %248; %Select Maximum X-coordinate for Room Assignment
-ymin = min(min(y),0.00000000001); %min(y); %Select Minimum Y-coordinate for Room Assignment
-ymax = max(max(y), room_width); %max(y); %Select Maximum Y-coordinate for Room Assignment
-zmin = min(min(z),0); %0.00000000001; %Select Minimum Z-coordinate for Room Assignment
-zmax = max(max(z),room_height); %243; %Select Maximum Z-coordinate for Room Assignment
+room = xlsread(drive_data,'H3:J3'); %Reposition Room Origin to Room Corner (if not defined in corner)
+xmin = min([min(x),room(1),room_length+max(x)]); %Select Minimum X-coordinate for Room Assignment
+xmax = max([max(x),xmin+room_length]); %Select Maximum X-coordinate for Room Assignment
+ymin = min([min(y),room(2),room_width+max(y)]); %Select Minimum Y-coordinate for Room Assignment
+ymax = max([max(y),ymin+room_width]); %Select Maximum Y-coordinate for Room Assignment
+zmin = min([min(z),room_height+max(z)]); %Select Minimum Z-coordinate for Room Assignment
+zmax = max([max(z),min(x)+room_height,zmin+room_height]); %Select Maximum Z-coordinate for Room Assignment
+
 aoi = [xmin xmax ymin ymax zmin zmax]; %Room Assignment
+aoi(any(aoi==0,2))=1e-10; %Replace All Zeros with Near Zero Number
 
-stdev = 0.1; %Approximated Standard Deviation of Stain Width Measurement in mm
-
-res = 7.5; %Resolution of Heat Map (Length of Cube Dimensions)
+uncertANDres = xlsread(drive_data,'H6:I6'); %Defined Measurement Uncertainty and Desired Resolution Inputs
+stdev = uncertANDres(1); %Approximated Standard Deviation of Stain Width Measurement in mm
+res = uncertANDres(2); %Resolution of Heat Map (Length of Cube Dimensions)
 
 if xmin<xmax
     xcube = xmin:res:xmax; %X-dimension Range of Cube Positions
@@ -235,13 +243,9 @@ t_u = [1,0,0]; %Upward Surface Tangential Vector (Upward Surface)
 t_f = [0,0,-1]; %Front Surface Tangential Vector (Front Surface)
 t_d = [1,0,0]; %Downward Surface Tangential Vector (Downward Surface)
 
-room_size = [aoi(1)+0.00000000001 aoi(2) aoi(5)+0.00000000001 aoi(6)]; %Determine Room Size from Room Assignment
+room_size = [aoi(1) aoi(2) aoi(5) aoi(6)]; %Determine Room Size from Room Assignment
 max_room_size = max(room_size); %Maximum Room Dimension for Scaling Purposes
 min_room_size = min(room_size); %Minimum Room Dimension for Scaling Purposes
-
-Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
-Spread_Fact_theta = 20*pi/180; %Spreading Factor %Uncertainty in In-plane Angle (Theta) in radians
-Spread_Fact_upsilon = 20*pi/180; %Spreading Factor %Uncertainty in Off-plane Angle (Upsilon) in radians
 
 dwnsamp = 4; %Select Stain Cluster Sample Rate by Integer Factor; Enter '1' if Clustering Adjacent Stains
 sampsize = 3;%round(0.45*numstains); %Select Stain Cluster Sample Size by Integer Factor Greater than Three (3)

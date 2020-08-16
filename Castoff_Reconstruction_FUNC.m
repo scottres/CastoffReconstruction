@@ -1,4 +1,4 @@
-function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num)
+function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num,sig_n)
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % %
@@ -1053,7 +1053,6 @@ end
 Psi_tot = Psi_cu.*Psi_theta.*Psi_upsilon*((1/(del_rad*sqrt(2*pi)))*exp((-1/2)*(1/del_rad)^2));
 
 %Product Distribution Floor
-sig_n = 2;
 Psi_tot(any(Psi_tot<(max(Psi_tot)*exp(-0.5*(sig_n^2))),2)) = max(Psi_tot)*exp(-0.5*(sig_n^2));
 
 %Plot Room Dimensions, Stains, and Stain Trajectories

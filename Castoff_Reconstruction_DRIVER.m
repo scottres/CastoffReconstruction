@@ -135,7 +135,7 @@ tic
 %%%%%%%%%%%%%%%%%%%  Export Data from Excel Spreadsheet  %%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-drive_data = 'Ink_Trial.csv';
+drive_data = 'Ink_Trial_INPUT.csv';
 num_ref = xlsread(drive_data); %Read in .CSV data file
 num_ref = size(num_ref,1); %Determine Length of Columns
 drive_datamat = regexprep(drive_data,'.csv','','ignorecase'); %Change .mat name for Saving Results

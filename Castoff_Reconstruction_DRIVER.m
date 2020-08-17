@@ -197,12 +197,13 @@ inclsurf_4 = 1; %Choose '1' to INCLUDE Surface #4 (Downward Surface) Stains; Cho
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 room = xlsread(drive_data,'H3:J3'); %Reposition Room Origin to Room Corner (if not defined in corner)
-xmin = min([min(x),room(1),room_length+max(x)]); %Select Minimum X-coordinate for Room Assignment
+room(any(room==0,1))=1e-10; %Replace All Zeros with Near Zero Number
+xmin = min([min(x),1e-10]); %Select Minimum X-coordinate for Room Assignment
 xmax = max([max(x),xmin+room_length]); %Select Maximum X-coordinate for Room Assignment
-ymin = min([min(y),room(2),room_width+max(y)]); %Select Minimum Y-coordinate for Room Assignment
+ymin = min([min(y),1e-10]); %Select Minimum Y-coordinate for Room Assignment
 ymax = max([max(y),ymin+room_width]); %Select Maximum Y-coordinate for Room Assignment
-zmin = min([min(z),room_height+max(z)]); %Select Minimum Z-coordinate for Room Assignment
-zmax = max([max(z),min(x)+room_height,zmin+room_height]); %Select Maximum Z-coordinate for Room Assignment
+zmin = min([min(z),1e-10,room_height]); %Select Minimum Z-coordinate for Room Assignment
+zmax = max([max(z),zmin+room_height]); %Select Maximum Z-coordinate for Room Assignment
 
 aoi = [xmin xmax ymin ymax zmin zmax]; %Room Assignment
 aoi(any(aoi==0,2))=1e-10; %Replace All Zeros with Near Zero Number

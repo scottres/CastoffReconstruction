@@ -342,7 +342,9 @@ for trj = 1:size(ABx,1)
     elseif inDA(trj) == 1
         endpts(trj,:) = [D12(trj,:),A12(trj,:)]; %Select Bisector from Single Bisector Triangle Combination Containing Reference Point
     else
-        endpts(trj,:) = zeros(size([D12(trj,:),A12(trj,:)]));
+        Psi_tot = zeros(size(isocubes)); %End Iteration if Cluster is Empty
+        ind = NaN;
+        return
     end
 end
 

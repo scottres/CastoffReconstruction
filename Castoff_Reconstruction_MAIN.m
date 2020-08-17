@@ -881,7 +881,7 @@ for iq = 1:comb_num;
         E_n = e_n(B(ip,:),:); %Clustered Normal Tangential Vectors
         E_t = e_t(B(ip,:),:); %Clustered Tangential Vectors
         E_nxt = e_nxt(B(ip,:),:); %Clustered Normal x Tangential Vectors
-        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num,sig_n); %Function Determining Castoff Reconstruction
+        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,Spread_Fact_cu,Spread_Fact_theta,Spread_Fact_upsilon,dalpha_range,dgamma_range,datamat,clstr_num,iq,comb_num,sig_n,fileID); %Function Determining Castoff Reconstruction
         if ishandle(3)
           figure(3);
           hold on;

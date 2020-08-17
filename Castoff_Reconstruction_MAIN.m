@@ -259,9 +259,9 @@ if opti_space == opti_default
   fprintf(fileID, '%s\r\n', strcat('opti_space =','',num2str(opti_space))); %Inputs are within Predefined Range
 else
   fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "opti_space" is not ideal.'); %Inputs are within Predefined Range
-  fprintf(fileID, '%s\r\n', strcat('opti_space =','',num2str(opti_space),' (ideal "opti_space" value =','',num2str(opti_default),')')); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n\n', strcat('opti_space =','',num2str(opti_space),' (ideal "opti_space" value =','',num2str(opti_default),')')); %Inputs are within Predefined Range
 end
-fclose(fileID); %Close OUTPUT
+% fclose(fileID); %Close OUTPUT
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%  Define Surface Normal Vectors  %%%%%%%%%%%%%%%%%%%%%
@@ -1037,7 +1037,7 @@ save(datamat); %Save Results
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Output Results  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-fileID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
+% fileID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
 fprintf(fileID, '%s\r\n', 'Cast-off Reconstruction Results:'); %Display OUTPUT Variables
 fprintf(fileID, '%12s %24s %36s\r\n','High Percentile Faces(x)','High Percentile Faces(y)','High Percentile Faces(z)'); %Display OUTPUT Variables
 for outi = 1:size(f1,1)

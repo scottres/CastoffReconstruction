@@ -256,10 +256,10 @@ else
   fprintf(fileID, '%s\r\n', strcat('dist_clstr =','',num2str(dist_clstr),' (ideal "dist_clstr" value =','',num2str(dist_default),')')); %Inputs are within Predefined Range
 end
 if opti_space == opti_default
-  fprintf(fileID, '%s\r\n', strcat('opti_space =','',num2str(opti_space))); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n%s\r\n', strcat('opti_space =','',num2str(opti_space)),''); %Inputs are within Predefined Range
 else
   fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "opti_space" is not ideal.'); %Inputs are within Predefined Range
-  fprintf(fileID, '%s\r\n\n', strcat('opti_space =','',num2str(opti_space),' (ideal "opti_space" value =','',num2str(opti_default),')')); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n%s\r\n', strcat('opti_space =','',num2str(opti_space),' (ideal "opti_space" value =','',num2str(opti_default),')'),''); %Inputs are within Predefined Range
 end
 % fclose(fileID); %Close OUTPUT
 

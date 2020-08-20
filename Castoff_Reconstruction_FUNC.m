@@ -753,14 +753,14 @@ del_rad = sqrt(sum((dalpha)^2+(dgamma)^2)); %Total Uncertainty of Alpha Impact A
 
 if any(d_alpha < dalpha_range(1),1) || any(d_alpha > dalpha_range(2),1)
 %  file_ID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
-  fprintf(file_ID, '%s\r\n', 'WARNING: The inputted value for "d_alpha" is not ideal.'); %Inputs are within Predefined Range
-  fprintf(file_ID, '%s\r\n', strcat('dalpha =','',num2str(d_alpha),' (ideal "dalpha" Range =','',num2str(dalpha_range))); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "d_alpha" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('dalpha =','',num2str(d_alpha),' (ideal "dalpha" Range =','',num2str(dalpha_range))); %Inputs are within Predefined Range
 %  fclose(file_ID);
 end
 if any(d_gamma < dgamma_range(1),1) || any(d_gamma > dgamma_range(2),1)
 %  file_ID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
-  fprintf(file_ID, '%s\r\n', 'WARNING: The inputted value for "d_gamma" is not ideal.'); %Inputs are within Predefined Range
-  fprintf(file_ID, '%s\r\n', strcat('dgamma =','',num2str(d_gamma),' (ideal "dgamma" Range =','',num2str(dgamma_range))); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "d_gamma" is not ideal.'); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('dgamma =','',num2str(d_gamma),' (ideal "dgamma" Range =','',num2str(dgamma_range))); %Inputs are within Predefined Range
 %  fclose(file_ID);
 end
 

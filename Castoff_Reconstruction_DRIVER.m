@@ -222,6 +222,16 @@ else
     zcube = zmin:res:zmax; %Z-dimension Range of Cube Positions
 end
 
+if mod(abs(xmax-xmin),res) == 0
+    xcube = xcube(1,1:length(xcube)-1);
+end
+if mod(abs(ymax-ymin),res) == 0
+    ycube = ycube(1,1:length(ycube)-1);
+end
+if mod(abs(zmax-zmin),res) == 0
+    zcube = zcube(1,1:length(zcube)-1);
+end
+
 [Xcu,Zcu,Ycu] = meshgrid(xcube,zcube,ycube); %X,Y,Z Meshed Cube Positions (X,Y,Z Minimum of Cube/Bottom,Front,Left Corner)
 cu_cx = Xcu+(res/2); %Cube Center X-Coordinate
 cu_cy = Ycu+(res/2); %Cube Center Y-Coordinate

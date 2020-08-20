@@ -918,7 +918,7 @@ for iq = 1:comb_num;
                 isocubes = isocubes.*Weight; %Multiply PDF Distribution for Remaining Iterations
             end
         end
-    percent_calculation = round(ip/clstr_num(iq)*100)
+    percent_calculation = strcat(num2str(round(ip/clstr_num(iq)*100)),'%')
 
     if ip == 1;
         NUM_clstr = clstr_num; %Count Initial PDF Distribution

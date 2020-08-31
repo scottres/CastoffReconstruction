@@ -25,6 +25,7 @@ Required Repository Files to run the code:
  - 'meshVolume.m' 
  - 'inpolyhedron.m' 
  - 'triangulateFaces.m' 
+ - 'linecirc.m'
 
 Licenses:
 All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository ˜Licenses folder, this was not intentional by the author.

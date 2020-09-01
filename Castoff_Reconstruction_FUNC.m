@@ -747,7 +747,7 @@ bsctintdist = mean([dist1 dist2],2); %Choose the Average Distance between the Tw
 
 d_alpha = (((sin(alpha_orig).^2)./(1-(sin(alpha_orig).^2))).*((1+(sin(alpha_orig).^2)).*(((stdev*0.1).^2)*ones(numstains,1))./((minor*0.1).^2))); %Alpha Impact Angle Uncertainty in Degrees
 dalpha = sqrt(sum(d_alpha.^2)); %Root Sum Squared Alpha Impact Angle Uncertainty in Degrees
-d_gamma = (0.4204*exp(0.0541*alpha_orig)); %Gamma Impact Angle Uncertainty in Degrees
+d_gamma = (0.4204*exp(0.0541*alpha_orig*180/pi))*pi/180; %Gamma Impact Angle Uncertainty in Degrees
 dgamma = sqrt(sum((d_gamma.^2))); %Root Sum Squared Gamma Impact Angle Uncertainty in Degrees
 del_rad = sqrt(sum((dalpha)^2+(dgamma)^2)); %Total Uncertainty of Alpha Impact Angle
 

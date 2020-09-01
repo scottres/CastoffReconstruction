@@ -1063,11 +1063,11 @@ fclose(fileID);
 
 fprintf('Script ran at %s\n', datestr(now,'HH:MM:SS.FFF')); %End Run Designator with Time
 tot_time = toc();
-fprintf(strcat('Total Elapsed Run Time: ', num2str(tot_time), ' seconds', '%s\n'));
-fprintf(strcat('Total Elapsed Cluster Analysis Time: ', num2str(time6-time5), ' seconds', '%s\n'));
+fprintf('Total Elapsed Run Time: %s\n', strcat(num2str(tot_time), ' seconds'));
+fprintf('Total Elapsed Cluster Analysis Time: %s\n', strcat(num2str(time6-time5), ' seconds'));
 min_W_dist = min(min(min(isocubes,[],1),[],2),[],3);
-fprintf(strcat('Minimum Weight Distribution: ', num2str(min_W_dist), '%s\n'));
-fprintf(' ,  Note: if "Minimum Weight Distribution" is zero, consider including fewer clusters to prevent distributing zeros %s\n');
+fprintf('Minimum Weight Distribution: %s', num2str(min_W_dist));
+fprintf(',  Note: if "Minimum Weight Distribution" is zero, consider including fewer clusters to prevent distributing zeros %s\n');
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%  Send Email Notification of Completion  %%%%%%%%%%%%%%%%%

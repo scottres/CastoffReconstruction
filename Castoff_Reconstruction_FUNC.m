@@ -745,11 +745,12 @@ bsctintdist = mean([dist1 dist2],2); %Choose the Average Distance between the Tw
 % % %     CC = sum(CC.*fb)/sum(fb); %Resulting Center Location X-Coordinate Vector for all Three Selected Trajectory Intersections
 % end
 
-d_alpha = ((((sin(alpha_orig).^2)./(1-(sin(alpha_orig).^2))).*((1+(sin(alpha_orig).^2)).*((((stdev*0.1).^2)*ones(numstains,1))./((minor*0.1).^2))))); %Alpha Impact Angle Uncertainty in Degrees
+d_alpha = ((((sin(alpha_orig).^2)./(1-(sin(alpha_orig).^2))).*((1+(sin(alpha_orig).^2)).*((((stdev*0.1).^2)*ones(numstains,1))./((minor*0.1).^2)))))*pi/180; %Alpha Impact Angle Uncertainty in Degrees
+d_alpha(any(d_alpha>45*pi/180,2)) = 45*pi/180;
 dalpha = sqrt(sum(d_alpha.^2)/numstains); %Root Sum Squared Alpha Impact Angle Uncertainty in Degrees
 d_gamma = (0.4204*exp(0.0541*alpha_orig*180/pi))*pi/180; %Gamma Impact Angle Uncertainty in Degrees
 dgamma = sqrt(sum((d_gamma.^2))/numstains); %Root Sum Squared Gamma Impact Angle Uncertainty in Degrees
-del_rad = sqrt(sum((dalpha)^2+(dgamma)^2)); %Total Uncertainty of Alpha Impact Angle
+del_rad = sqrt(sum((dalpha)^2+(dgamma)^2)/2); %Total Uncertainty of Alpha Impact Angle
 
 if any(d_alpha < dalpha_range(1),1) || any(d_alpha > dalpha_range(2),1)
 %  file_ID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT

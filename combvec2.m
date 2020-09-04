@@ -1,4 +1,4 @@
-function out = CombVec(varargin)
+function out = combvec2(varargin)
 %CombVec Generate all possible combinations of input vectors.
 %
 %   CombVec(A1,A2,...) takes any number of inputs,

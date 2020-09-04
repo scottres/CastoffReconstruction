@@ -125,21 +125,11 @@ limit2s = [aoi(1) aoi(4) aoi(5); aoi(2) aoi(4) aoi(5); aoi(2) aoi(4) aoi(6); aoi
 
 %Find Normal Vector of Plane that Best Fits Given Elements in V
 Xn0 = [0,-1,0]; %Initial Guess/Starting Point for 'fminsearch' Iteration
-test_interpreter=["Is the interpreter Matlab or " "Octave?"];
-if (size(test_interpreter) == [1 36])
-  fprintf('Octave interpreter detected.') % Octave is probably running.
-  options = optimset('MaxIter',1e10,'Algorithm','levenberg-marquardt','Display','off'); %Option to View 'fminsearch' Iteration
-  funn = @(Xn)sum(abs(v*[Xn(1),Xn(2),Xn(3)]')); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
-  Xn = fminsearch(funn,Xn0,options); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
-elseif (size(test_interpreter) == [1 2])
-  fprintf('Matlab interpreter detected.') %MATLAB is probably running
-  options = optimset('MaxIter',1e10); %Option to View 'fminsearch' Iteration
-  funn = @(Xn)sum((v*[Xn(1),Xn(2),Xn(3)]').^2); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
-  Xn = fsolve(funn,Xn0,options); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
-else
-  fprintf('It looks like the interpreter is neither Matlab nor Octave')
-  exit
-end
+%Find Normal Vector of Plane that Best Fits Given Elements in V
+Xn0 = [0,-1,0]; %Initial Guess/Starting Point for 'fminsearch' Iteration
+options = optimset('MaxIter',1e10); %Option to View 'fminsearch' Iteration
+funn = @(Xn)sum((v*[Xn(1),Xn(2),Xn(3)]').^2); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
+Xn = fsolve(funn,Xn0,options); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
 norm_n = sqrt(sum([Xn(1),Xn(2),Xn(3)].^2,2)); %Normal of Minimization Function Result
 Sn = [Xn./norm_n]; %Normalize Minimization Function Result
 if dot(Sn,Xn0)<0

@@ -1057,7 +1057,7 @@ SF_theta(any(isnan(SF_theta)==1,2),:) = []; %Remove NaNs
 
 Spread_Fact_theta = mean(SF_theta); %*180/pi;
 Spread_Fact_theta(any(isnan(Spread_Fact_theta)==1,2),:) = 1;
-Spread_Fact_theta(Spread_Fact_theta<SF_Theta_Floor) = SF_Theta_Floor; %Theta Spreading Factor Floor
+Spread_Fact_theta(Spread_Fact_theta<SF_theta_range(1)) = SF_theta_range(1); %Theta Spreading Factor Floor
 
 if Spread_Fact_theta >= SF_theta_range(1) && Spread_Fact_theta < SF_theta_range(2)
   fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta (deg) =','',num2str(Spread_Fact_theta))); %Inputs are within Predefined Range

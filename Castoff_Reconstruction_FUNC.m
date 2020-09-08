@@ -2,7 +2,7 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % %
-% % % Last Updated 09/04/2020
+% % % Last Updated 09/08/2020
 % % % 
 % % % %D.A. and S.MC acknowledge financial support from the Center for Statistics and Applications in Forensic Evidence (CSAFE), the National Institute of Justice (NIJ), and Iowa State University, as well as pro bono technical and consulting services from Struo LLC, a scientific consulting company based in Ames IA.  D.A. thanks his Iowa State University colleague Xuan Hien Nguyen for pointing the geometry proposition to him.  E.L. would like to thank Independent Forensic Services (IFS) for their assistance and use of their facilities and resources in collecting the non-circular cast-off patterns.
 % % % Cast-off Reconstruction has only been tested on Matlab 2019a and GNU Octave 5.2.0. It is recommended that Matlab 2019a, GNU Octave 5.2.0 or newer versions are used to run the included files. Users run the included files at their own risk. Especially, D.A. and S.MC assume no responsibility regarding the results, their interpretation and the consequences thereof.
@@ -23,7 +23,7 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % %  - 'triangulateFaces.m' 
 % % % 
 % % % Licenses:
-% % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository ˜Licenses folder, this was not intentional by the author.
+% % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository ËœLicenses folder, this was not intentional by the author.
 % % % 
 % % % Required Installation for GNU Octave Compatibility: (Suggested Installation Order)
 % % %  - Updated GNU Octave (written and tested with 5.2.0) (https://www.gnu.org/software/octave/download.html)
@@ -36,24 +36,24 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % 		 - SlikSVN is a standalone command-line Subversion client for Windows.
 % % % 	 - 64-Bit GStreamer-1.16.0 MSVC runtime or later versions MUST INSTALL COMPLETE SOFTWARE(https://gstreamer.freedesktop.org/data/pkg/windows/1.16.0/gstreamer-1.0-msvc-x86_64-1.16.0.msi)		 - GStreamer is a library for constructing graphs of media-handling components.
 % % %  - Download Psychtoolbox Toolbox Version 3 (PTB-3) (http://psychtoolbox.org/)
-% % % 	 - Unzip download in new folder ˜C:\toolbox
+% % % 	 - Unzip download in new folder ËœC:\toolbox
 % % % 	 - Open Octave, copy and paste the following script to the command window to install Psychtoolbox:
 % % % >> cd C:\toolbox
-% % % >> DownloadPsychtoolbox(˜C:\toolbox)
+% % % >> DownloadPsychtoolbox(ËœC:\toolbox)
 % % %  - Follow command window prompts to finish installation.
-% % %  - Prior to running ˜Castoff_Recosntruction_DRIVER.m or ˜Castoff_Reconstruction_MAIN.m the ˜io and ˜signal packages need to be loaded.
+% % %  - Prior to running ËœCastoff_Recosntruction_DRIVER.m or ËœCastoff_Reconstruction_MAIN.m the Ëœio and Ëœsignal packages need to be loaded.
 % % % 	 - Load packages on an as needed basis by copying and pasting the following script to the command window:
 % % % 		>> pkg load io
 % % % 		>> pkg load signal
 % % % 	 - Required packages can be found at (https://octave.sourceforge.io/packages.php) for download.
 % % % 	 - Automatically load packages at Octave startup with the following:
 % % % 		 - Go to (C:\Octave\Octave-5.2.0\mingw64\share\octave\site\m\startup)
-% % % 		 - Open ˜octaverc with a text editor.
+% % % 		 - Open Ëœoctaverc with a text editor.
 % % % 		 - Copy and paste the following lines to the end of the document:
 % % % 		>> pkg load io
 % % % 		>> pkg load signal
 % % %  - Save file.
-% % % 			 - If ˜octaverc does not exist, copy, paste, and save the following to a text file and save to the directory (C:\Octave\Octave-5.2.0\mingw64\share\octave\site\m\startup):
+% % % 			 - If Ëœoctaverc does not exist, copy, paste, and save the following to a text file and save to the directory (C:\Octave\Octave-5.2.0\mingw64\share\octave\site\m\startup):
 % % % 				>> pkg load io
 % % % 				>> pkg load signal
 % % % 
@@ -63,8 +63,8 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % 3. Verify desired clustering method in 'MAIN.m' ('dwn_samp_stains' and 'opti_space' is the default Clustering Method).
 % % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m')  (FARO and Hemospat Drivers are provided for trialing code).
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
-% % % 6. MAIN will output the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See ˜User Inputs: (DRIVER) ˜res for estimated runtimes.
-% % % 7. MAIN will save the Resultant Variables as a .mat file denoted by ‘Castoff_Reconstruction.mat’ and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
+% % % 6. MAIN will output the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See ËœUser Inputs: (DRIVER) Ëœres for estimated runtimes.
+% % % 7. MAIN will save the Resultant Variables as a .mat file denoted by â€˜Castoff_Reconstruction.matâ€™ and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
 % % % 
 % % % Figure Displaying:
 % % %  - Show and hide legends from resultant figures using:
@@ -125,7 +125,7 @@ limit2s = [aoi(1) aoi(4) aoi(5); aoi(2) aoi(4) aoi(5); aoi(2) aoi(4) aoi(6); aoi
 
 %Find Normal Vector of Plane that Best Fits Given Elements in V
 Xn0 = [0,-1,0]; %Initial Guess/Starting Point for 'fminsearch' Iteration
-options = optimset('MaxIter',1e10); %Option to View 'fminsearch' Iteration
+options = optimset('MaxIter',1e10,'Algorithm','levenberg-marquardt','Display','off'); %Option to View 'fsolve' Iteration
 funn = @(Xn)sum((v*[Xn(1),Xn(2),Xn(3)]').^2); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
 Xn = fsolve(funn,Xn0,options); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
 norm_n = sqrt(sum([Xn(1),Xn(2),Xn(3)].^2,2)); %Normal of Minimization Function Result
@@ -602,7 +602,7 @@ numstains = length(BB); %Revaluating Variable
 % for sec = 1:numstains
 %     point = [BB(sec) CC(sec)]; %Define Point
 %     intcpt = point(2) - perp_m(sec).*point(1); %Calculate z-azis intercept
-%     xvct = point(1)-Direction(1):point(1)+Direction(3); %Â‘XÂ’ Vector for Tangent
+%     xvct = point(1)-Direction(1):point(1)+Direction(3); %Ã‚â€˜XÃ‚â€™ Vector for Tangent
 %     tngt = perp_m(sec).*xvct + intcpt; %Calculate Z points
 %     xvct_1(sec,:) = xvct;
 %     tngt_1(sec,:) = tngt; %calculate Z points
@@ -1060,10 +1060,10 @@ Spread_Fact_theta(any(isnan(Spread_Fact_theta)==1,2),:) = 1;
 Spread_Fact_theta(Spread_Fact_theta<SF_Theta_Floor) = SF_Theta_Floor; %Theta Spreading Factor Floor
 
 if Spread_Fact_theta >= SF_theta_range(1) && Spread_Fact_theta < SF_theta_range(2)
-  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta =','',num2str(Spread_Fact_theta))); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta (deg) =','',num2str(Spread_Fact_theta))); %Inputs are within Predefined Range
 else
   fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "Spread_Fact_theta" is not ideal.'); %Inputs are within Predefined Range
-  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta =','',num2str(Spread_Fact_theta),' (ideal "Spread_Fact_theta" Range =','',num2str(SF_theta_range))); %Inputs are within Predefined Range
+  fprintf(fileID, '%s\r\n', strcat('Spread_Fact_theta (deg) =','',num2str(Spread_Fact_theta),' (ideal "Spread_Fact_theta" Range =','',num2str(SF_theta_range))); %Inputs are within Predefined Range
 end
 
 theta12 = [theta1' theta2'];
@@ -1075,15 +1075,17 @@ for intgr = 1:numstains
 end
 
 Spread_Fact_cu = sqrt(sum((d_alpha.*dist_stain).^2+(d_gamma.*dist_stain).^2)/numstains); %Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
-if Spread_Fact_cu<SF_Cu_Floor
-  Spread_Fact_cu = SF_Cu_Floor; %Theta Spreading Factor Floor
+if Spread_Fact_cu<SF_cu_range(1)
+  Spread_Fact_cu = SF_cu_range(1); %Theta Spreading Factor Floor
+elseif Spread_Fact_cu>SF_cu_range(2)
+  Spread_Fact_cu = SF_cu_range(2); %Theta Spreading Factor Floor
 end
     
 if Spread_Fact_cu >= SF_cu_range(1) && Spread_Fact_cu < SF_cu_range(2)
- fprintf(fileID, '%s\r\n', strcat('Spread_Fact_cu =','',num2str(Spread_Fact_cu))); %Inputs are within Predefined Range
+ fprintf(fileID, '%s\r\n', strcat('Spread_Fact_cu (cm) =','',num2str(Spread_Fact_cu))); %Inputs are within Predefined Range
 else
  fprintf(fileID, '%s\r\n', 'WARNING: The inputted value for "Spread_Fact_cu" is not ideal.'); %Inputs are within Predefined Range
- fprintf(fileID, '%s\r\n', strcat('Spread_Fact_cu =','',num2str(Spread_Fact_cu),' (ideal "Spread_Fact_cu" Range =','',num2str(SF_cu_range))); %Inputs are within Predefined Range
+ fprintf(fileID, '%s\r\n', strcat('Spread_Fact_cu (cm) =','',num2str(Spread_Fact_cu),' (ideal "Spread_Fact_cu" Range =','',num2str(SF_cu_range))); %Inputs are within Predefined Range
 end
 
 for cu3 = 1:numel(cu_cx)

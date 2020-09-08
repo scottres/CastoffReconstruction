@@ -1164,8 +1164,8 @@ for cu3 = 1:numel(cu_cx)
 end
 
 %Product Distribution
-Weight_delta=((1/(Spread_Fact_delrad*sqrt(2*pi)))*exp((-1/2)*(del_rad/Spread_Fact_delrad)^2));
-Psi_tot = Psi_cu.*Psi_theta.*Psi_upsilon*Weight_delta;
+% Weight_delta=((1/(Spread_Fact_delrad*sqrt(2*pi)))*exp((-1/2)*(del_rad/Spread_Fact_delrad)^2));
+Psi_tot = Psi_cu.*Psi_theta; %.*Psi_upsilon; *Weight_delta;
 %  [min(Psi_cu(:)) min(Psi_theta(:)) min(Psi_upsilon(:)) ((1/(Spread_Fact_delrad*sqrt(2*pi)))*exp((-1/2)*(del_rad/Spread_Fact_delrad)^2))]
 %Product Distribution Floor
 Psi_tot(any(Psi_tot<(max(Psi_tot)*exp(-0.5*(sig_n^2))),2)) = max(Psi_tot)*exp(-0.5*(sig_n^2));

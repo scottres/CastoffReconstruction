@@ -125,7 +125,7 @@ limit2s = [aoi(1) aoi(4) aoi(5); aoi(2) aoi(4) aoi(5); aoi(2) aoi(4) aoi(6); aoi
 
 %Find Normal Vector of Plane that Best Fits Given Elements in V
 Xn0 = [0,-1,0]; %Initial Guess/Starting Point for 'fminsearch' Iteration
-options = optimset('MaxIter',1e10,'Algorithm','levenberg-marquardt','Display','off'); %Option to View 'fminsearch' Iteration
+options = optimset('MaxIter',1e10,'Algorithm','levenberg-marquardt','Display','off','MaxFunEvals',1e5); %Option to View 'fsolve' Iteration
 funn = @(Xn)sum((v*[Xn(1),Xn(2),Xn(3)]').^2); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
 Xn = fsolve(funn,Xn0,options); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
 norm_n = sqrt(sum([Xn(1),Xn(2),Xn(3)].^2,2)); %Normal of Minimization Function Result

@@ -120,9 +120,13 @@ clear,clc,close all
 
 load('Ink_Trial_DRIVER.mat');
 
-percentiles = [1e-1, 1e-4, 1e-7];
+number_traces=2;
+%regions=[0.95, 0.8,0.75];
+regions=[0.95, 0.8,0.65]
+percentiles = [regions(1)^(number_traces*NUM_clstr), regions(2)^(number_traces*NUM_clstr), regions(3)^(number_traces*NUM_clstr)]
+delta_region_plot=0; %cm
 
-figure(4);
+figure(6);
 hold on;
 grid on;
 p1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','c','LineWidth',5); %Plot Front Surface Dimensions
@@ -152,8 +156,15 @@ ylabel(['Y-Axis (cm)']);
 zlabel(['Z-Axis (cm)']);
 view(-30,30);
 axis square;
-xlim([min_room_size-100,max_room_size+100]);
-ylim([min_room_size-100,max_room_size+100]);
-zlim([min_room_size-100,max_room_size+100]);
+xlim([min_room_size-delta_region_plot,max_room_size+delta_region_plot]);
+ylim([min_room_size-delta_region_plot,max_room_size+delta_region_plot]);
+zlim([min_room_size-delta_region_plot,max_room_size+delta_region_plot]);
 set(gcf, 'Position', get(0, 'Screensize')); %Make Figure Full-screen
 hold off;
+
+
+surf1=isosurface(Xcu,Ycu,Zcu,isoscale,percentiles(1));
+surf2=isosurface(Xcu,Ycu,Zcu,isoscale,percentiles(2));
+surf3=isosurface(Xcu,Ycu,Zcu,isoscale,percentiles(3));
+
+volumes=[meshVolume(surf1.vertices, surf1.faces) meshVolume(surf2.vertices, surf2.faces) meshVolume(surf3.vertices, surf3.faces)];

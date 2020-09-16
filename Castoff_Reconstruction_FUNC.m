@@ -1000,7 +1000,7 @@ end
 
 cosangle3=rms([dot(Sn,v(1,:)),dot(Sn,v(2,:)),dot(Sn,v(3,:))]);
 angle3=pi/2-abs(acos(cosangle3));
-angular_delta=(rms(d_alpha)+rms(d_gamma))/2;
+angular_delta=(rms([d_alpha,d_gamma])); %this is root mean square
 % Spread_Fact_cu= rms([tan(angular_delta), tan(angle3)])*rms(dist_stain); %Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
 % Spread_Fact_cu=tan(angular_delta)*rms(dist_stain); %Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters
 Spread_Fact_cu= 2^0.5*rms([tan(angular_delta), tan(angle3)])*rms(dist_stain); %Spread_Fact_cu = res*2; %Spreading Factor %Uncertainty in Distance between a given Cube and Arc in centimeters

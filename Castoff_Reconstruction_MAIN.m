@@ -916,6 +916,10 @@ for iq = 1:comb_num;
         GammA(ip,:) = Gamma';
         FacE(ip,:) = Face';
 
+        scaling=log10(realmax('double'))-max(0,log10(max(isocubes)))-max(0,log10(max(Weight)))-5;
+        %scaling=0
+        isocubes=isocubes*10^scaling;
+
         if ip == 1
             if any(Weight) == 0
                 isocubes = ones(size(Weight)); %Skip PDF Distribution of All Zeros

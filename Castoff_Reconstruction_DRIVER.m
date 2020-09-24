@@ -70,7 +70,7 @@
 % % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m')  (FARO and Hemospat Drivers are provided for trialing code).
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 % % % 6. MAIN will output the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
-% % % 7. MAIN will save the Resultant Variables as a .mat file denoted by ˜Castoff_Reconstruction.mat and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
+% % % 7. MAIN will save the Resultant Variables as a .mat file denoted by ËœCastoff_Reconstruction.mat and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
 % % % 8. If cast-off reconstruction results suggest multiple cast-off swings, then update results by running POST with 'number_traces' reflecting the number of cast-off swings
 % % % 
 % % % Figure Displaying:
@@ -133,7 +133,7 @@ tic
 %%%%%%%%%%%%%%%%%%%  Import Data from Excel Spreadsheet  %%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-drive_data = 'Daniel_2_INPUT.csv';
+drive_data = 'INK_Trial_INPUT.csv';
 
 num_ref = xlsread(drive_data); %Read in .CSV data file
 num_ref = size(num_ref,1)+2; %Determine Length of Columns

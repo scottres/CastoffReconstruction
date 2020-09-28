@@ -70,9 +70,9 @@ Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % % Instructions to Run a first spatter pattern example ('Ink_Trial_INPUT.csv'), with stains measured by hand or with Hemospat:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Save all files included in the distribution to the same directory.
-% % % 3. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER_FARO.m').
-% % % 4. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
-% % % 5. Check that the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
+% % % 3. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m').
+% % % 4. Check that the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
+% % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 % % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
 % % % 7. MAIN also outputs the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
 % % % 8. MAIN also save the Resultant Variables as a .mat file denoted by Castoff_Reconstruction.mat

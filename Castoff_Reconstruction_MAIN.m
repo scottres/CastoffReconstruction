@@ -9,6 +9,7 @@
 % % %  - 'Castoff_Reconstruction_MAIN.m'
 % % %  - 'Castoff_Reconstruction_FUNC.m'
 % % %  - 'lineSegmentIntersect.m'
+% % %  - 'meshVolume.m'
 % % %  - 'point_to_line.m'
 % % %  - 'gauss_distribution.m'
 % % %  - 'CircleFitByPratt.m'
@@ -43,12 +44,9 @@
 % % % >> DownloadPsychtoolbox(C:\toolbox)
 % % %  - Follow command window prompts to finish installation.
 % % %  - Prior to running Castoff_Recosntruction_DRIVER.m or Castoff_Reconstruction_MAIN.m the io and signal packages need to be loaded.
-% % %    - Install Octave Forge package 'matgeom' by copying and pasting the following script to the command window:
-% % %     >> pkg install -forge matgeom
 % % % 	 - Load packages on an as needed basis by copying and pasting the following script to the command window:
 % % % 		>> pkg load io
 % % % 		>> pkg load signal
-% % %     >> pkg load matgeom
 % % % 	 - Required packages can be found at (https://octave.sourceforge.io/packages.php) for download.
 % % % 	 - Automatically load packages at Octave startup with the following:
 % % % 		 - Go to (C:\Octave\Octave-5.2.0\mingw64\share\octave\site\m\startup)
@@ -118,7 +116,6 @@ if (size(test_interpreter) == [1 36])
   fprintf('Octave interpreter detected.') % Octave is probably running.
   pkg load io
   pkg load signal
-  pkg load matgeom
 elseif (size(test_interpreter) == [1 2])
   fprintf('Matlab interpreter detected.') %MATLAB is probably running
 else

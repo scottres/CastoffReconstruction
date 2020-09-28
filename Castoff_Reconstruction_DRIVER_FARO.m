@@ -9,6 +9,7 @@
 % % %  - 'Castoff_Reconstruction_MAIN.m'
 % % %  - 'Castoff_Reconstruction_FUNC.m'
 % % %  - 'lineSegmentIntersect.m'
+% % %  - 'meshVolume.m'
 % % %  - 'point_to_line.m'
 % % %  - 'gauss_distribution.m'
 % % %  - 'CircleFitByPratt.m'
@@ -43,12 +44,9 @@
 % % % >> DownloadPsychtoolbox(C:\toolbox)
 % % %  - Follow command window prompts to finish installation.
 % % %  - Prior to running Castoff_Recosntruction_DRIVER.m or Castoff_Reconstruction_MAIN.m the io and signal packages need to be loaded.
-% % %    - Install Octave Forge package 'matgeom' by copying and pasting the following script to the command window:
-% % %     >> pkg install -forge matgeom
 % % % 	 - Load packages on an as needed basis by copying and pasting the following script to the command window:
 % % % 		>> pkg load io
 % % % 		>> pkg load signal
-% % %     >> pkg load matgeom
 % % % 	 - Required packages can be found at (https://octave.sourceforge.io/packages.php) for download.
 % % % 	 - Automatically load packages at Octave startup with the following:
 % % % 		 - Go to (C:\Octave\Octave-5.2.0\mingw64\share\octave\site\m\startup)
@@ -63,15 +61,35 @@
 % % % 				>> pkg load signal
 % % %         >> pkg load matgeom
 % % % 
-% % % Instructions to Run:
-% % % 1. Save all included files to the same directory.
-% % % 2. Fill in all 'INPUT.csv' file cells with user data (Room Dimensions: Room Length, Room Width, and Room Height; Distance to Room Corner from Measurement Origin: X-dimension Distance, Y-dimension Distance, and Z-dimension Distance; Actual Cast-off Circle (if known): X-coordinate, Y-coordinate, and Z-coordinate; Uncertainty/Resolution: Stain Width Measurement Uncertaintty and Cast-off Reconstruction Resolution)
-% % % 3. Verify desired clustering method in 'MAIN.m' ('dwn_samp_stains' and 'opti_space' is the default Clustering Method).
-% % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m')  (FARO and Hemospat Drivers are provided for trialing code).
+% % % Instructions to Run a first spatter pattern example ('Ink_Trial_INPUT.csv'), with stains measured by hand or with Hemospat:
+% % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
+% % % 2. Save all files included in the distribution to the same directory.
+% % % 3. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER_FARO.m').
+% % % 4. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
+% % % 5. Check that the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
+% % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
+% % % 7. MAIN also outputs the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
+% % % 8. MAIN also save the Resultant Variables as a .mat file denoted by Castoff_Reconstruction.mat
+% % % 9. MAIN and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
+% % % 10. Run again after changing the Stain Width Measurement Uncertainty (mm) or Cast-off Reconstruction Resolution (cm) in the input file 'Ink_Trial_INPUT.csv'
+% % %
+% % % Instructions to Run a second spatter pattern example ('FARO_Trial_10_INPUT.csv'), with stains measured with FARO:
+% % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
+% % % 2. Save all files included in the distribution to the same directory.
+% % % 3. Modify the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'FARO_Trial_10_INPUT_DRIVER.mat'
+% % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER_FARO.m').
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
-% % % 6. MAIN will output the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
-% % % 7. MAIN will save the Resultant Variables as a .mat file denoted by ˜Castoff_Reconstruction.mat and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
-% % % 8. If cast-off reconstruction results suggest multiple cast-off swings, then update results by running POST with 'number_traces' reflecting the number of cast-off swings
+% % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
+% % % 7. MAIN also outputs the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
+% % % 8. MAIN also save the Resultant Variables as a .mat file denoted by Castoff_Reconstruction.mat
+% % % 9. MAIN and Output the Cast-off Reconstruction Results with warnings as a txt-file denoted by 'Castoff_Reconstruction_OUTPUT.txt' displayed in Figures(4+) (figure number is dependent on clustering method). Figure(1) shows the Pratt fit automated reference point. Figure(3) outputs each clustered cast-off reconstructed arc.
+% % % 10. Run again after changing the Stain Width Measurement Uncertainty (mm) or Cast-off Reconstruction Resolution (cm) in the input file 'Ink_Trial_INPUT.csv'
+% % %
+% % % Instructions to Run your own data:
+% % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
+% % % 2. Enter spatter pattern information in an input 'input.csv' file with same format as either of the examples above
+% % % 3. Modify the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'input_DRIVER.mat'
+% % % 4. Follow same instructions (4-10) as either examples above.
 % % % 
 % % % Figure Displaying:
 % % %  - Show and hide legends from resultant figures using:

@@ -55,12 +55,10 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % 		 - Copy and paste the following lines to the end of the document:
 % % % 		>> pkg load io
 % % % 		>> pkg load signal
-% % %     >> pkg load matgeom
 % % %  - Save file.
 % % % 			 - If octaverc does not exist, copy, paste, and save the following to a text file and save to the directory (C:\Octave\Octave-5.2.0\mingw64\share\octave\site\m\startup):
 % % % 				>> pkg load io
 % % % 				>> pkg load signal
-% % %         >> pkg load matgeom
 % % % 
 % % % Instructions to Run a first spatter pattern example ('Ink_Trial_INPUT.csv'), with stains measured by hand or with Hemospat:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above

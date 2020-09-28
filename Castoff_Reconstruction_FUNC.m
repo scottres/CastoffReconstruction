@@ -1,7 +1,7 @@
 function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,dalpha_range,dgamma_range,SF_cu_range,datamat,clstr_num,iq,comb_num,sig_n,fileID); %Function Determining Castoff Reconstruction
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 09/27/2020
+% % % Last Updated 09/28/2020
 % % % 
 % % % Required Repository Files to run the code:
 % % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'
@@ -64,7 +64,7 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Save all files included in the distribution to the same directory.
 % % % 3. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m').
-% % % 4. Check that the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
+% % % 4. Check that the data name line 152 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 % % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
 % % % 7. MAIN also outputs the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
@@ -75,7 +75,7 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % Instructions to Run a second spatter pattern example ('FARO_Trial_10_INPUT.csv'), with stains measured with FARO:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Save all files included in the distribution to the same directory.
-% % % 3. Modify the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'FARO_Trial_10_INPUT_DRIVER.mat'
+% % % 3. Modify the data name line 152 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'FARO_Trial_10_INPUT_DRIVER.mat'
 % % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER_FARO.m').
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 % % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
@@ -87,7 +87,7 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % Instructions to Run your own data:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Enter spatter pattern information in an input 'input.csv' file with same format as either of the examples above
-% % % 3. Modify the data name line 137 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'input_DRIVER.mat'
+% % % 3. Modify the data name line 152 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'input_DRIVER.mat'
 % % % 4. Follow same instructions (4-10) as either examples above.
 % % % 
 % % % Figure Displaying:

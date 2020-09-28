@@ -1,6 +1,6 @@
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 09/21/2020
+% % % Last Updated 09/27/2020
 % % % 
 % % % Required Repository Files to run the code:
 % % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'

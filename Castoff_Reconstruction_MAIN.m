@@ -65,7 +65,7 @@ data = 'INK_Trial_INPUT_DRIVER.mat';
 
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 sig_n = 3; %Minimum PDF Value Standard Deviations
-percentiles = [0.95 0.75 0.60]; %Choose Resultant Product Distribution Percentiles for Plotting (this can be change when replotting the final figure (Figure 4)
+percentiles = [0.90 0.75 0.60]; %Choose Resultant Product Distribution Percentiles for Plotting (this can be change when replotting the final figure (Figure 4)
 SF_cu_range = [0,400]; %Distance Spreading Factor Allowable Range, in cm (zero to 5cm or 30 cm give reasonable results)
 dalpha_range = [0,0.5*pi]; %Alpha Impact Angle Range
 dgamma_range = [0,2*pi]; %Gamma Directional Angle Range

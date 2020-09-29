@@ -8,7 +8,7 @@ Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 %Center for Statistics and Applications in Forensic Evidence
 %Department of Mechanical Engineering - Attinger Lab
 %Iowa State University
-% % % Last Updated 09/28/2020
+% % % Last Updated 09/29/2020
 % % % 
 % % % Required Repository Files to run the code:
 % % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'
@@ -71,7 +71,7 @@ Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Save all files included in the distribution to the same directory.
 % % % 3. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER.m').
-% % % 4. Check that the data name line 152 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
+% % % 4. Check that the data name line 64 in the MAIN ('Castoff_Reconstruction_MAIN.m') reads 'INK_Trial_INPUT_DRIVER.mat'
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 % % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
 % % % 7. MAIN also outputs the 'Total Elapsed Cluster Analysis Time:', in seconds (s), with the total program run time excluding any variable time from user input. See User Inputs: (DRIVER) res for estimated runtimes.
@@ -82,7 +82,7 @@ Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % % Instructions to Run a second spatter pattern example ('FARO_Trial_10_INPUT.csv'), with stains measured with FARO:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Save all files included in the distribution to the same directory.
-% % % 3. Modify the data name line 152 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'FARO_Trial_10_INPUT_DRIVER.mat'
+% % % 3. Modify the data name line 64 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'FARO_Trial_10_INPUT_DRIVER.mat'
 % % % 4. 'Run' (F5) the DRIVER ('Castoff_Reconstruction_DRIVER_FARO.m').
 % % % 5. 'Run' (F5) the MAIN ('Castoff_Reconstruction_MAIN.m').
 % % % 6. Maximize figure 4 to observe the reconstructed swing regions in blue, green and red
@@ -94,7 +94,7 @@ Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 % % % Instructions to Run your own data:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
 % % % 2. Enter spatter pattern information in an input 'input.csv' file with same format as either of the examples above
-% % % 3. Modify the data name line 152 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'input_DRIVER.mat'
+% % % 3. Modify the data name line 64 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'input_DRIVER.mat'
 % % % 4. Follow same instructions (4-10) as either examples above.
 % % % 
 % % % Figure Displaying:

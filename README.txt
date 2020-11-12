@@ -8,7 +8,7 @@ Reconstructs stains from cast-off event to reproduce the motion of cast-off.
 %Center for Statistics and Applications in Forensic Evidence
 %Department of Mechanical Engineering - Attinger Lab
 %Iowa State University
-% % % Last Updated 09/29/2020
+% % % Last Updated 11/12/2020
 % % % 
 % % % Required Repository Files to run the code:
 % % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'

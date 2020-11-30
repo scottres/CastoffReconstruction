@@ -614,7 +614,7 @@ d_alpha = ((((sin(alpha_orig).^2)./(1-(sin(alpha_orig).^2))).*((1+(sin(alpha_ori
 d_alpha(d_alpha>45*pi/180)=45*pi/180; %Maximum allowed Alpha Uncertainty
 dalpha = sqrt(sum(d_alpha.^2)/numstains); %Root Sum Squared Alpha Impact Angle Uncertainty in Degrees
 if sum(deltagamma) == 0
-    d_gamma = 0.5*(0.4204*exp(0.0541*alpha_orig*180/pi))*pi/180; %Gamma Impact Angle Uncertainty in Degrees
+    d_gamma = (0.4204*exp(0.0541*alpha_orig*180/pi))*pi/180; %Gamma Impact Angle Uncertainty in Degrees
 else
     d_gamma = deltagamma;
 end

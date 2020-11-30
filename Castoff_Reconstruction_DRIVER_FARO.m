@@ -106,7 +106,7 @@ if isempty(DeltaGamma)
     DeltaGamma = zeros(size(gamma));
 end
 if any(DeltaGamma>180,2)
-    warning('User Entered Unacceptable Values of Measured Uncertainty in Gamma Angles (deg) in INPUTS; Measured Uncertainty in Gamma Angles (deg) must be less than or equal to 180 degrees');
+    warning('User Inputted Unacceptable Values of Measured Uncertainty in Gamma Angles (deg) in INPUTS; Measured Uncertainty in Gamma Angles (deg) must be less than or equal to 180 degrees');
     return
 end 
 

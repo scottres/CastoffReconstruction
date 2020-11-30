@@ -1,6 +1,6 @@
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 11/12/2020
+% % % Last Updated 11/30/2020
 % % % 
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
@@ -61,7 +61,7 @@ tic()
 %%%%%%%%%%%%%%%%%%%%%%%%%%  User Defined Values  %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-data = 'FARO_Trial_10_INPUT_DRIVER.mat';
+data = 'FARO_Trial_10_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 6 of 'McCleary et al FSI 2021', respectively  OR  %data = 'INK_Trial_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 7 of 'McCleary et al FSI 2021', respectively
 
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 sig_n = 3; %Minimum PDF Value Standard Deviations

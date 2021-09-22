@@ -1,6 +1,6 @@
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 01/04/2020
+% % % Last Updated 01/25/2021
 % % % 
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
@@ -14,8 +14,8 @@
 % % %  - 'room', room length (along x-dimension), width (along y-dimension), and height (along z-direction) (x,y,z) in centimeters (INPUT)
 % % %  - 'xmin','xmax','ymin','ymax','zmin','zmax' minimum and maximum coordinate of possible region of cast-off origin) (DRIVER)
 % % %  - 'res' Spatial resolution of reconstruction (Length of Discretized Uniform Regions of Space Dimensions) (1-15cm is the recommended range) (15cm took ~30 seconds, 10cm took ~1 minute, and 7.5cm took ~1 hour in a large room with several hundred stains and default specifications) (INPUT)
-% % %  - 'n_b','n_u','n_f','n_d','t_b','t_u','t_f','t_d' surface normal (n) and tangential (t) unit vectors (four surfaces by default are assumed to be perpendicular) (surfaces include: back,upward,front,downward) *** Does not incorporate side surfaces *** (DRIVER)
-% % %  - 'inclsurf_[1-4]' Choose '1' to INCLUDE Surface #[1-4] Stains; Choose '0' to EXCLUDE Surface #[1-4]
+% % %  - 'n_b','n_u','n_f','n_d','n_l','n_r','t_b','t_u','t_f','t_d','t_l','t_r' surface normal (n) and tangential (t) unit vectors (six surfaces by default are assumed to be perpendicular) (surfaces include: back,upward,front,downward,left,right) (DRIVER)
+% % %  - 'inclsurf_[1-6]' Choose '1' to INCLUDE Surface #[1-6] Stains; Choose '0' to EXCLUDE Surface #[1-6]
 % % %  - 'InOutTrajectory' *****NOT RECOMMENDED TO USE***** Choose '1' to Select Stain Trajectories ONLY Directed into Room Dimensions; Choose '0' to Select Trajectories Directed BOTH In and Out of Room Dimensions
 % % %  - 'alpha30less' Choose '1' to Remove impact angles Alpha Values Less All Alpha Values Greater Than 30 degrees
 % % %  - 'alpha60more' Choose '1' to Remove impact angles Alpha Values Greater Than 60 degrees; Choose '0' to Keep All Alpha Values Greater Than 60 degrees (DRIVER)
@@ -78,6 +78,7 @@ res_range = [0,15]; %Spatial Region Resolution Allowable Range
 datamat = regexprep(data,'_DRIVER','','ignorecase'); %Change .mat name for Saving Results
 dlmwrite(regexprep(datamat,'.mat','_OUTPUT.txt'),[]); %Create Output .txt-file
 
+%Define Clustering Parameters
 dwn_samp_stains = 1; %Set Equal to '1' to Cluster by Downsampling, Set Equal to '0' for another Cluster Option
 dwnsamp = 1; %[1:15]'; %Select Stain Cluster Sample Rate by Integer Factor; Enter '1' if Clustering Adjacent Stains
 sampsize = 3; %round(0.45*numstains); %Select Stain Cluster Sample Size by Integer Factor Greater than Three (3)
@@ -145,23 +146,31 @@ nxt_b = cross(n_b,t_b); %Normal x Tangential Vector (Back Surface)
 nxt_u = cross(n_u,t_u); %Normal x Tangential Vector (Upward Surface)
 nxt_f = cross(n_f,t_f); %Normal x Tangential Vector (Front Surface)
 nxt_d = cross(n_d,t_d); %Normal x Tangential Vector (Downward Surface)
+nxt_l = cross(n_l,t_l); %Normal x Tangential Vector (Leftward Surface)
+nxt_r = cross(n_r,t_r); %Normal x Tangential Vector (Rightward Surface)
 
 en_b = [n_b(1)*surf1' n_b(2)*surf1' n_b(3)*surf1']; %Normal Vectors on Back Surface
 en_u = [n_u(1)*surf2' n_u(2)*surf2' n_u(3)*surf2']; %Normal Vectors on Upward Surface
 en_f = [n_f(1)*surf3' n_f(2)*surf3' n_f(3)*surf3']; %Normal Vectors on Front Surface
 en_d = [n_d(1)*surf4' n_d(2)*surf4' n_d(3)*surf4']; %Normal Vectors on Downward Surface
+en_l = [n_l(1)*surf5' n_l(2)*surf5' n_l(3)*surf5']; %Normal Vectors on Leftward Surface
+en_r = [n_r(1)*surf6' n_r(2)*surf6' n_r(3)*surf6']; %Normal Vectors on Rightward Surface
 
 et_b = [t_b(1)*surf1' t_b(2)*surf1' t_b(3)*surf1']; %Tangential Vectors on Back Surface
 et_u = [t_u(1)*surf2' t_u(2)*surf2' t_u(3)*surf2']; %Tangential Vectors on Upward Surface
 et_f = [t_f(1)*surf3' t_f(2)*surf3' t_f(3)*surf3']; %Tangential Vectors on Front Surface
 et_d = [t_d(1)*surf4' t_d(2)*surf4' t_d(3)*surf4']; %Tangential Vectors on Downward Surface
+et_l = [t_l(1)*surf5' t_l(2)*surf5' t_l(3)*surf5']; %Tangential Vectors on Leftward Surface
+et_r = [t_r(1)*surf6' t_r(2)*surf6' t_r(3)*surf6']; %Tangential Vectors on Rightward Surface
 
 enxt_b = [nxt_b(1)*surf1' nxt_b(2)*surf1' nxt_b(3)*surf1']; %Normal x Tangential Vectors on Back Surface
 enxt_u = [nxt_u(1)*surf2' nxt_u(2)*surf2' nxt_u(3)*surf2']; %Normal x Tangential Vectors on Upward Surface
 enxt_f = [nxt_f(1)*surf3' nxt_f(2)*surf3' nxt_f(3)*surf3']; %Normal x Tangential Vectors on Front Surface
 enxt_d = [nxt_d(1)*surf4' nxt_d(2)*surf4' nxt_d(3)*surf4']; %Normal x Tangential Vectors on Downward Surface
+enxt_l = [nxt_l(1)*surf5' nxt_l(2)*surf5' nxt_l(3)*surf5']; %Normal x Tangential Vectors on Leftward Surface
+enxt_r = [nxt_r(1)*surf6' nxt_r(2)*surf6' nxt_r(3)*surf6']; %Normal x Tangential Vectors on Rightward Surface
 
-en = cat(3,en_b,en_u,en_f,en_d); %Concatenate Normal Vectors
+en = cat(3,en_b,en_u,en_f,en_d,en_l,en_r); %Concatenate Normal Vectors
 en1 = [en(:,:,surfmat(inclsurf,1))]; %Reorder Surface Normal Vectors for Clustering
 en2 = [en(:,:,surfmat(inclsurf,2))]; %Reorder Surface Normal Vectors for Clustering
 en3 = [en(:,:,surfmat(inclsurf,3))]; %Reorder Surface Normal Vectors for Clustering
@@ -171,7 +180,7 @@ en2(all(en2==0,2),:)=[]; %Remove Rows of All Zero Elements
 en3(all(en3==0,2),:)=[]; %Remove Rows of All Zero Elements
 en4(all(en4==0,2),:)=[]; %Remove Rows of All Zero Elements
 
-et = cat(3,et_b,et_u,et_f,et_d); %Concatenate Tangential Vectors
+et = cat(3,et_b,et_u,et_f,et_d,et_l,et_r); %Concatenate Tangential Vectors
 et1 = [et(:,:,surfmat(inclsurf,1))]; %Reorder Surface Tangential Vectors for Clustering
 et2 = [et(:,:,surfmat(inclsurf,2))]; %Reorder Surface Tangential Vectors for Clustering
 et3 = [et(:,:,surfmat(inclsurf,3))]; %Reorder Surface Tangential Vectors for Clustering
@@ -181,7 +190,7 @@ et2(all(et2==0,2),:)=[]; %Remove Rows of All Zero Elements
 et3(all(et3==0,2),:)=[]; %Remove Rows of All Zero Elements
 et4(all(et4==0,2),:)=[]; %Remove Rows of All Zero Elements
 
-enxt = cat(3,enxt_b,enxt_u,enxt_f,enxt_d); %Concatenate Normal x Tangential Vectors
+enxt = cat(3,enxt_b,enxt_u,enxt_f,enxt_d,enxt_l,enxt_r); %Concatenate Normal x Tangential Vectors
 enxt1 = [enxt(:,:,surfmat(inclsurf,1))]; %Reorder Surface Normal x Tangential Vectors for Clustering
 enxt2 = [enxt(:,:,surfmat(inclsurf,2))]; %Reorder Surface Normal x Tangential Vectors for Clustering
 enxt3 = [enxt(:,:,surfmat(inclsurf,3))]; %Reorder Surface Normal x Tangential Vectors for Clustering
@@ -250,7 +259,6 @@ if opti_space == 1 %Only Select Stains Equally Spaced 'opti_dist' Distance Apart
     alpha_p = alpha_p(xij,:);
     alpha = alpha(xij,:);
     face = face(xij,:);
-    alpha_pg = alpha_pg(xij,:);
     minor = minor(xij,:);
     lngth = lngth(xij,:);
     surf1 = surf1(xij);
@@ -278,13 +286,61 @@ if opti_space == 1 %Only Select Stains Equally Spaced 'opti_dist' Distance Apart
     v = v(xij,:);
 end
 
+numstains = length(Xs);
+
+%Find Normal Vector of Plane that Best Fits Given Elements in V
+Xn_0 = [-1,-1,-1]; %Initial Guess/Starting Point for 'fminsearch' Iteration
+option_s = optimset('MaxIter',1e10,'Algorithm','levenberg-marquardt','Display','off','MaxFunEvals',1e5); %Option to View 'fsolve' Iteration
+funN = @(X_n)sum((v*[X_n(1),X_n(2),X_n(3)]').^2); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
+X_n = fsolve(funN,Xn_0,option_s); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
+normn = sqrt(sum([X_n(1),X_n(2),X_n(3)].^2,2)); %Normal of Minimization Function Result
+S_n = [X_n./normn]; %Normalize Minimization Function Result
+if dot(S_n,Xn_0)<0
+    S_n = -S_n;
+end
+
+%Find Point Closest to the Given Stains
+Xp_0 = [0.5*(aoi(2)-aoi(1)),0.5*(aoi(4)-aoi(3)),0.5*(aoi(6)-aoi(5))]; %Initial Guess/Starting Point for 'fminsearch' Iteration 
+fun_p = @(X_p)sum(sqrt(sum(([Xs Ys Zs]-[X_p(1).*ones(numstains,1) X_p(2).*ones(numstains,1) X_p(3).*ones(numstains,1)]).^2))); %Function to Minimize Distance between Stain Locations and Choosen Point
+X_p = fminsearch(fun_p,Xp_0); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
+
+%Project Stain Velocity Vectors to Best Plane
+subXYZ_p = (([Xs,Ys,Zs]-[X_p(1).*ones(numstains,1) X_p(2).*ones(numstains,1) X_p(3).*ones(numstains,1)])*S_n'); %Subsidary Step to Determine Project Stains to Best Plane
+XYZ_p = [Xs Ys Zs]-[subXYZ_p.*S_n(1) subXYZ_p.*S_n(2) subXYZ_p.*S_n(3)]; %Project Stains to Best Plane
+V_p = v-[((v*S_n')./(sqrt(sum(S_n.^2,2)).^2)).*S_n(1) ((v*S_n')./(sqrt(sum(S_n.^2,2)).^2)).*S_n(2) ((v*S_n')./(sqrt(sum(S_n.^2,2)).^2)).*S_n(3)]; %Project Stain Velocities to Best Plane
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%  2D to 3D Translation and Rotation  %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Translate Stains to Origin
+d0 = S_n*X_p'; %Dot Product of Normal Vector and Point Closest to the Given Stains
+Pt2Pln = [((d0*S_n(1))./sqrt(sum(S_n.^2))) ((d0*S_n(2))./sqrt(sum(S_n.^2))) ((d0*S_n(3))./sum(sqrt(S_n.^2)))]; %Shortest Distance between Origin and Plane
+XYZ_t = XYZ_p-X_p.*ones(numstains,1); %Apply Translation of Projected Stains to Origin by Point Closest to Given Stains
+
+%Rotate Stains and Stain Vectors to XZ-plane
+u0 = cross([0,-1,0],S_n); %Determine Line of Intersection between XZ-plane and Plane Best Fitting Stain Velocity Vectors
+norm_u0 = sqrt(sum([u0(1),u0(2),u0(3)].^2,2)); %Normal of Best Plane
+U_1 = [u0./norm_u0]; %Normalized Best Plane
+phi_1 = -acos(dot([0,-1,0],S_n)); %Planar Angle to Rotate Plane about Line of Intersection to XZ-plane
+
+R_1 = [((U_1(1)^2)+((U_1(2)^2)+(U_1(3)^2))*cos(phi_1)) (U_1(1)*U_1(2)*(1-cos(phi_1))-U_1(3)*sin(phi_1)) (U_1(1)*U_1(3)*(1-cos(phi_1))+U_1(2)*sin(phi_1)); (U_1(1)*U_1(2)*(1-cos(phi_1))+U_1(3)*sin(phi_1)) ((U_1(2)^2)+((U_1(1)^2)+(U_1(3)^2))*cos(phi_1)) (U_1(2)*U_1(3)*(1-cos(phi_1))-U_1(1)*sin(phi_1)); (U_1(1)*U_1(3)*(1-cos(phi_1))-U_1(2)*sin(phi_1)) (U_1(2)*U_1(3)*(1-cos(phi_1))+U_1(1)*sin(phi_1)) ((U_1(3)^2)+((U_1(1)^2)+(U_1(2)^2))*cos(phi_1))]; %3D Rotation Matrix
+
+if phi_1 == 0;
+   XYZ_u = XYZ_t;
+   V_u = V_p;
+else
+   XYZ_u = (R_1*XYZ_t')'; %Apply Rotation Matrix to Translated Stain Locations
+   V_u = (R_1*V_p')'; %Apply Rotation Matrix to Projected Stain Velocity Vectors
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%  Automatically Determine Bisector Reference Point  %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Determine Reference Point within Region of Cast-off Origin
-xzi = [Xs Ys Zs];%[x y z]+max_room_size*v; %Initial Trajectory Endpoint
-xzf = [Xs Ys Zs]-max_room_size*v; %Final Trajectory Endpoint
+xzi = [XYZ_u];%[x y z]+max_room_size*v; %Initial Trajectory Endpoint
+xzf = [XYZ_u]-max_room_size*V_u; %Final Trajectory Endpoint
 xrefi = combvec2(xzi(:,1)',xzi(:,1)')'; %Compiling All Possible Trajectory Final X-Coordinate Combinations and Purmutations
 zrefi = combvec2(xzi(:,3)',xzi(:,3)')'; %Compiling All Possible Trajectory Final Z-Coordinate Combinations and Purmutations
 xreff = combvec2(xzf(:,1)',xzf(:,1)')'; %Compiling All Possible Trajectory Final X-Coordinate Combinations and Purmutations
@@ -316,90 +372,60 @@ xref = xref(~isnan(xref)); %Remove NaNs
 zref = zref(~isnan(zref)); %Remove NaNs
 
 xzref = [xref zref]; %Save Circle Center X and Z-coordinates
-XZref = CircleFitByPratt(xzref); %Calculate Geometric Fitted Circlular Arc from Stain Trajectory Intersections using the Pratt Method
+XZref = CircleFitByPratt(xzref); %Calculate Geometric Fitted Circlular Arc from Stain Trajectory Intersections using the Pratt Fit Method
 x_ref_xz = XZref(1); %Save Arc Center X-coordinate
-y_ref_yz = mean(Ys); %Select Arc Center Y-coordinate as Average Stain Y-coordinate
+y_ref_yz = 0; %Select Arc Center Y-coordinate as Average Stain Y-coordinate
 z_ref_xz = XZref(2); %Save Arc Center Z-coordinate
 
-Ref = [x_ref_xz y_ref_yz z_ref_xz]; %Compiled User Defined Refernce Point
+Ref = [x_ref_xz y_ref_yz z_ref_xz]; %Compiled User Defined Refernce Point ... Ref = [100 50 121]; %
 x_ref = Ref(1); %X-coordinate of User Defined Refernce Point
 y_ref = Ref(2); %Y-coordinate of User Defined Refernce Point
 z_ref = Ref(3); %Z-coordinate of User Defined Refernce Point
 
-%Plot Room Dimensions, Stains, Stain Trajectories, and Automatically Generated Reference Point
-figure(1)
-hold on 
-grid on
-axis equal
-h1_front_xz = plot([aoi(1) aoi(1)], [aoi(5) aoi(6)],'Color','c','LineWidth',5); %Plot Front Surface Dimensions
-h1_downward_xz = plot([aoi(1) aoi(2)], [aoi(5) aoi(5)],'Color','g','LineWidth',4); %Plot Downward Surface Dimensions
-h1_back_xz = plot([aoi(2) aoi(2)], [aoi(5) aoi(6)],'Color','b','LineWidth',3); %Plot Back Surface Dimensions
-h1_upward_xz = plot([aoi(1) aoi(2)], [aoi(6) aoi(6)],'Color','y','LineWidth',2); %Plot Downward Surface Dimensions
-h2_xz = plot(Xs,Zs, '.','MarkerSize',max_room_size*0.1,'Color','r','LineWidth',2); %Plot XYZ Stains
-title({'Cast-off Center & Radius of Origin',''})
-xlabel(['X-Axis (cm)'])
-ylabel(['Z-Axis (cm)'])
+%Rotate Results from XZ-plane to Original Best Plane
+U_2 = Ref/sqrt(sum(Ref.^2,2)); %Choose Previously Determined Line of Intersection between XZ-plane and Plane Best Fitting Stain Velocity Vectors 
+phi_2 = -phi_1; %Planar Angle to Rotate Plane about Line of Intersection to XZ-plane
+R_2 = [((U_2(1)^2)+((U_2(2)^2)+(U_2(3)^2))*cos(phi_2)) (U_2(1)*U_2(2)*(1-cos(phi_2))-U_2(3)*sin(phi_2)) (U_2(1)*U_2(3)*(1-cos(phi_2))+U_2(2)*sin(phi_2)); (U_2(1)*U_2(2)*(1-cos(phi_2))+U_2(3)*sin(phi_2)) ((U_2(2)^2)+((U_2(1)^2)+(U_2(3)^2))*cos(phi_2)) (U_2(2)*U_2(3)*(1-cos(phi_2))-U_2(1)*sin(phi_2)); (U_2(1)*U_2(3)*(1-cos(phi_2))-U_2(2)*sin(phi_2)) (U_2(2)*U_2(3)*(1-cos(phi_2))+U_2(1)*sin(phi_2)) ((U_2(3)^2)+((U_2(1)^2)+(U_2(2)^2))*cos(phi_2))]; %3D Rotation Matrix
 
-sample1 = numstains; %Save 'numstains' for Debugging
-numstains = length(Xs); %Recalculate 'numstains'
-
-for ref1 = 1:numstains
-    h3_xz(ref1) = plot([(Xs(ref1)-1000*v(ref1,1)) (Xs(ref1))],[(Zs(ref1)-1000*v(ref1,3)) (Zs(ref1))]); %Plot Stain Trajectories
+if phi_2 == 0;
+   Reft = Ref;
+else
+   Reft = (R_2*[Ref]')'; %Apply Reversed Rotation Matrix to Reference Point
 end
-axis square;
-xlim([min_room_size-100,max_room_size+100]);
-ylim([min_room_size-100,max_room_size+100]);
-zlim([min_room_size-100,max_room_size+100]);
-% plot(Xref,Zref,'c.','MarkerSize',20); %Plot Automatically Generated Reference Point from Geometric Circle Fit Method
-h_guess = plot(XZref(1),XZref(2),'g.','MarkerSize',20);
-h_xz = [h1_front_xz h1_downward_xz h1_back_xz h1_upward_xz h2_xz h3_xz(1) h_guess]; % h9(sample2) h10 %Plot Automatically Generated Reference Point by Pratt Method
-legend(h_xz, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Automated Reference Point by Pratt Method', 'Location', 'northeastoutside')
-chi = linspace(0, 2*pi, 500); %Angle Vector for Plotting Known Cast-off Motion
 
-% ************************************************
-% % ***** Use when Cast-off Motion is known *****
-%  x_fin = (center(1) + radius.*cos(chi))'; %Resultant X-Coordinate of Cast-off Circle
-%  y_fin = (center(2)*ones(size(x_fin)));
-%  z_fin = (center(3) + radius.*sin(chi))'; %Resultant Z-Coordinate of Cast-off Circle
+Refp = Reft+X_p; %Apply Reversed Translation to Reference Point
+XYZrefp = Refp; %Save Reference Point
 
- x_actual = actual_x + actual_r.*cos(chi); %Resultant X-Coordinate of Cast-off Circle
- y_actual = actual_y*ones(size(x_actual)); %Resultant Y-Coordinate of Cast-off Circle
- z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-Coordinate of Cast-off Circle
+%Create Plane for Plotting
+W = null(S_n); %Find two Orthonormal Vectors which are Orthogonal to v
+[P0,Q0] = meshgrid(-50:1:50); %Provide a Gridwork (you choose the size)
+S_x = Refp(1)+W(1,1)*P0+W(1,2)*Q0; %Compute the Corresponding Cartesian Coordinates using the two Vectors in w
+S_y = Refp(2)+W(2,1)*P0+W(2,2)*Q0; %Compute the Corresponding Cartesian Coordinates using the two Vectors in w
+S_z = Refp(3)+W(3,1)*P0+W(3,2)*Q0; %Compute the Corresponding Cartesian Coordinates using the two Vectors in w
 
- h15 = plot(x_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
- h16 = plot(actual_x,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
-% ************************************************
-
+%Plot Room Dimensions, Stains, Stain Trajectories, and Automatically Generated Reference Point
 figure(2); 
 hold on; 
 h1_front = plot3([aoi(1) aoi(1) aoi(1) aoi(1) aoi(1)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','c','LineWidth',5); 
 h1_downward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(5) aoi(5) aoi(5) aoi(5) aoi(5)],'Color','g','LineWidth',4); 
 h1_back = plot3([aoi(2) aoi(2) aoi(2) aoi(2) aoi(2)], [aoi(4) aoi(3) aoi(3) aoi(4) aoi(4)], [aoi(5) aoi(5) aoi(6) aoi(6) aoi(5)],'Color','b','LineWidth',3); 
 h1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)],[aoi(3) aoi(3) aoi(4) aoi(4) aoi(3)], [aoi(6) aoi(6) aoi(6) aoi(6) aoi(6)],'Color','y','LineWidth',2); 
-h2 = plot3(x_orig,y_orig,z_orig, '.','MarkerSize',25,'Color','r'); 
+h2 = plot3(x_orig,y_orig,z_orig, '.','MarkerSize',25,'Color','r');
 xlabel(['X-Axis (cm)']); 
 ylabel(['Y-Axis (cm)']); 
 zlabel(['Z-Axis (cm)']); 
 for ref1 = 1:numstains_orig;    
   h11(ref1) = plot3([(x_orig(ref1)-10000*v_orig(ref1,1)) (x_orig(ref1)+10000*v_orig(ref1,1))],[(y_orig(ref1)-10000*v_orig(ref1,2)) (y_orig(ref1)+10000*v_orig(ref1,2))],[(z_orig(ref1)-10000*v_orig(ref1,3)) (z_orig(ref1)+10000*v_orig(ref1,3))],'Color','r','LineWidth',1);
 end
-% ************************************************
-% % ***** Use when Cast-off Motion is known *****
-%  x_fin = (center(1) + radius.*cos(chi))'; %Resultant X-Coordinate of Cast-off Circle
-%  y_fin = (center(2)*ones(size(x_fin)));
-%  z_fin = (center(3) + radius.*sin(chi))'; %Resultant Z-Coordinate of Cast-off Circle
-
- x_actual = actual_x + actual_r.*cos(chi); %Resultant X-Coordinate of Cast-off Circle
- y_actual = actual_y*ones(size(x_actual)); %Resultant Y-Coordinate of Cast-off Circle
- z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-Coordinate of Cast-off Circle
-
- h15 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
- h16 = plot3(actual_x,actual_y,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
-% ************************************************
+h_2 = plot3(XYZrefp(1),XYZrefp(2),XYZrefp(3),'g.','MarkerSize',20);
+h_3 = quiver3(XYZrefp(1),XYZrefp(2),XYZrefp(3),S_n(1)*25,S_n(2)*25,S_n(3)*25,'Color','b');
+h_4 = surf(S_x,S_y,S_z,'FaceAlpha',0.2,'EdgeAlpha',0.2); %Plot the Resulting Plane
 xlim([aoi(1)-10,aoi(2)+10]);
 ylim([aoi(3)-10,aoi(4)+10]);
 zlim([aoi(5)-10,aoi(6)+10]);
-view(0,0)
+h_xyz = [h1_front h1_downward h1_back h1_upward h2 h11(1) h_2 h_3 h_4]; % h9(sample2) h10 %Plot Automatically Generated Reference Point by Pratt Method
+legend(h_xyz, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Trajectories','Automated Reference Point by Pratt Method','Best-fit Plane Normal Vector','Best-fit Plane', 'Location', 'northeastoutside')
+view([S_n])
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%  User Defined Bisector Reference Point  %%%%%%%%%%%%%%%%%%
@@ -473,7 +499,6 @@ end
 au = cross([zeros(numstains,1) -1*ones(numstains,1) zeros(numstains,1)],an,2); %Determine Line of Intersection between XZ-plane and Plane Best Fitting Stain Velocity Vectors
 anu = sqrt(sum(au.^2,2)); %Normal of Best Plane 
 au1 = au./[anu anu anu];
-%     au1 = [zeros(numstains,1) zeros(numstains,1) -1*ones(numstains,1)];
 aphi1 = -acos(dot([zeros(numstains,1) -1*ones(numstains,1) zeros(numstains,1)],an,2)); %Planar Angle to Rotate Plane about Line of Intersection to XZ-plane
 
 for akn = 1:numstains; %Planar Angle Corrections
@@ -501,34 +526,6 @@ beta_orig = beta; %Save Original Beta Angles
         pgn2(rain,:) = (PG1(rain,:)-PG0(rain,:))/norm(PG1(rain,:)-PG0(rain,:));
         alpha_pg(rain,:) = abs(atan2(norm(det([pgn2(rain,:);pgn1(rain,:)])),dot(pgn1(rain,:),pgn2(rain,:)))); %Projected Global Alpha angle relative to Gravity
         dot_tv(rain,:) = dot(e_t(rain,:),vproj(rain,:),2); %Directionality Check of Projected Vectors
-
-        %Projected Global Alpha Angle Surface Corrections
-        if face(rain) == 1;
-            if dot_tv(rain)<=0;
-                alpha_gn(rain,:) = 2*pi-alpha_pg(rain);
-            else;
-                alpha_gn(rain,:) = 2*pi-alpha_pg(rain);
-            end;
-        elseif face(rain) == 2;
-            if dot_tv(rain)<=0;
-                alpha_gn(rain,:) = 2*pi-alpha_pg(rain);
-            else;
-                alpha_gn(rain,:) = alpha_pg(rain);
-            end;
-            alpha(rain,:) = (0.5*pi)-alpha_pg(rain);
-        elseif face(rain) == 3;
-            if dot_tv(rain)<=0;
-                alpha_gn(rain,:) = alpha_pg(rain);
-            else;
-                alpha_gn(rain,:) = alpha_pg(rain);
-            end
-        elseif face(rain) == 4;
-            if dot_tv(rain)<=0;
-                alpha_gn(rain,:) = 2*pi-alpha_pg(rain);
-            else;
-                alpha_gn(rain,:) = alpha_pg(rain);
-            end
-        end
     end
 
 time5 = toc();
@@ -588,7 +585,7 @@ for iq = 1:comb_num;
         E_n = e_n(B(ip,:),:); %Clustered Normal Tangential Vectors
         E_t = e_t(B(ip,:),:); %Clustered Tangential Vectors
         E_nxt = e_nxt(B(ip,:),:); %Clustered Normal x Tangential Vectors
-        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,DeltaGamma(B(ip,:),:),dalpha_range,dgamma_range,SF_cu_range,datamat,clstr_num,iq,comb_num,sig_n,fileID); %Function Determining Castoff Reconstruction
+        [Weight,Sn] = Castoff_Reconstruction_FUNC(Face,V,aoi,XS,YS,ZS,Alpha_p,Alpha,Alpha_pg,Alpha_orig,Gamma,Minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,DeltaGamma(B(ip,:),:),dalpha_range,dgamma_range,SF_cu_range,datamat,clstr_num,iq,comb_num,sig_n,fileID,S_n); %Function Determining Castoff Reconstruction
         if ishandle(3)
           figure(3);
           hold on;
@@ -669,23 +666,13 @@ p1_upward = plot3([aoi(1) aoi(2) aoi(2) aoi(1) aoi(1)], [aoi(3) aoi(3) aoi(4) ao
 p9 = plot3(x_orig,y_orig,z_orig,'.','Color','c','MarkerSize',10); %Plot Original XYZ Stains
 p2 = plot3(Xs,Ys,Zs,'.','Color','r','MarkerSize',15); %Plot XYZ Stains
 chi = linspace(0, 2*pi, 25); %Angle Vector
-% ************************************************
-% % ***** Use when Cast-off Motion is known *****
-% x_actual = actual_x + actual_r.*cos(chi); %Resultant X-Coordinate of Cast-off Circle
-% y_actual = actual_y*ones(size(x_actual)); %Resultant Y-Coordinate of Cast-off Circle
-% z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-Coordinate of Cast-off Circle
-% ************************************************
 for ref1 = 1:numstains;
     p10(ref1) = plot3([(x_orig(ref1)-10000*v_orig(ref1,1)) (x_orig(ref1)+10000*v_orig(ref1,1))],[(y_orig(ref1)-10000*v_orig(ref1,2)) (y_orig(ref1)+10000*v_orig(ref1,2))],[(z_orig(ref1)-10000*v_orig(ref1,3)) (z_orig(ref1)+10000*v_orig(ref1,3))],'Color','c','LineWidth',1);
 end;
 for ref1 = 1:numstains;
     p8(ref1) = plot3([(Xs(ref1)-10000*v(ref1,1)) (Xs(ref1)+10000*v(ref1,1))],[(Ys(ref1)-10000*v(ref1,2)) (Ys(ref1)+10000*v(ref1,2))],[(Zs(ref1)-10000*v(ref1,3)) (Zs(ref1)+10000*v(ref1,3))],'Color','r','LineWidth',1);
 end;
-% ************************************************
-% % ***** Use when Cast-off Motion is known *****
- p3 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
- p4 = plot3(actual_x,actual_y,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
-% ************************************************
+
 colorcu = {[1,0,0];[0,1,0];[0,0,1];[0,1,1]};
 transcu = [1.0 0.5 0.2 0.2 0.1 0.075 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05];
 
@@ -716,7 +703,7 @@ title({'Castoff Reconstruction'});
 xlabel(['X-Axis (cm)']);
 ylabel(['Y-Axis (cm)']);
 zlabel(['Z-Axis (cm)']);
-view(-30,30);
+view([S_n]);
 set(gca,'FontSize',20);
 axis equal;
 hold off;
@@ -732,7 +719,6 @@ save(datamat); %Save Results
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Output Results  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% fileID = fopen(regexprep(datamat,'.mat','_OUTPUT.txt'),'w'); %Open OUTPUT
 fprintf(fileID, '%s\r\n', 'Cast-off Reconstruction Results:'); %Display OUTPUT Variables
 fprintf(fileID, '%12s %24s %36s\r\n','High Percentile Faces(x)','High Percentile Faces(y)','High Percentile Faces(z)'); %Display OUTPUT Variables
 for outi = 1:size(f1,1)

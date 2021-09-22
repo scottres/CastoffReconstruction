@@ -1,6 +1,6 @@
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 11/30/2020
+% % % Last Updated 01/18/2021
 % % % 
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
@@ -58,7 +58,7 @@ warning on verbose
 tic
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%  Export Data from Excel Spreadsheet  %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%  Import Data from Excel Spreadsheet  %%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 drive_data = 'FARO_Trial_10_INPUT.csv';
@@ -118,6 +118,8 @@ inclsurf_1 = 1; %Choose '1' to INCLUDE Surface #1 (Back Surface) Stains; Choose 
 inclsurf_2 = 1; %Choose '1' to INCLUDE Surface #2 (Upward Surface) Stains; Choose '0' to EXCLUDE Surface #2 (Upward Surface)
 inclsurf_3 = 1; %Choose '1' to INCLUDE Surface #3 (Front Surface) Stains; Choose '0' to EXCLUDE Surface #3 (Front Surface)
 inclsurf_4 = 1; %Choose '1' to INCLUDE Surface #4 (Downward Surface) Stains; Choose '0' to EXCLUDE Surface #4 (Downward Surface)
+inclsurf_5 = 1; %Choose '1' to INCLUDE Surface #5 (Leftward Surface) Stains; Choose '0' to EXCLUDE Surface #5 (Leftward Surface)
+inclsurf_6 = 1; %Choose '1' to INCLUDE Surface #6 (Rightward Surface) Stains; Choose '0' to EXCLUDE Surface #6 (Rightward Surface)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Define Values  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -172,10 +174,14 @@ n_b = [-1,0,0]; %Back Surface Normal Vector (Back Surface)
 n_u = [0,0,1]; %Upward Surface Normal Vector (Upward Surface)
 n_f = [1,0,0]; %Front Surface Normal Vector (Front Surface)
 n_d = [0,0,-1]; %Downward Surface Normal Vector (Downward Surface)
+n_l = [0,-1,0]; %Leftward Surface Normal Vector (Leftward Surface)
+n_r = [0,1,0]; %Rightward Surface Normal Vector (Rightward Surface)
 t_b = [0,0,-1]; %Back Surface Tangential Vector (Back Surface)
 t_u = [1,0,0]; %Upward Surface Tangential Vector (Upward Surface)
 t_f = [0,0,-1]; %Front Surface Tangential Vector (Front Surface)
 t_d = [1,0,0]; %Downward Surface Tangential Vector (Downward Surface)
+t_l = [0,0,-1]; %Leftward Surface Tangential Vector (Leftward Surface)
+t_r = [0,0,-1]; %Rightward Surface Tangential Vector (Rightward Surface)
 
 room_size = [aoi(1) aoi(2) aoi(5) aoi(6)]; %Determine Room Size from Room Assignment
 max_room_size = max(room_size); %Maximum Room Dimension for Scaling Purposes
@@ -235,15 +241,12 @@ isocubes = isocubes(:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Calculate Surface Intersection Coordinates
-surface_B1 = [room_size(2) room_size(3) room_size(2) room_size(4)]; %Surface #1 (Front) in [X1 Y1 X2 Y2] coordinates
-surface_U2 = [room_size(2) room_size(4) room_size(1) room_size(4)]; %Surface #2 (Upward) in [X1 Y1 X2 Y2] coordinates
-surface_F3 = [room_size(1) room_size(4) room_size(1) room_size(3)]; %Surface #3 (Back) in [X1 Y1 X2 Y2] coordinates
-surface_D4 = [room_size(1) room_size(3) room_size(2) room_size(3)]; %Surface #4 (Downward) in [X1 Y1 X2 Y2] coordinates
-
-surf1 = (xmin-3<=x & x<=xmin+5)'; %Surface Criteria
-surf2 = (zmax-3<=z & z<=zmax+5)'; %Surface Criteria
-surf3 = (xmax-3<=x & x<=xmax+5)'; %Surface Criteria
-surf4 = (zmin-3<=z & z<=zmin+5)'; %Surface Criteria
+surf1 = (xmin-3<=x & x<=xmin+3)'; %Surface Criteria
+surf2 = (zmax-3<=z & z<=zmax+3)'; %Surface Criteria
+surf3 = (xmax-3<=x & x<=xmax+3)'; %Surface Criteria
+surf4 = (zmin-3<=z & z<=zmin+3)'; %Surface Criteria
+surf5 = (ymin-3<=y & y<=ymin+3)'; %Surface Criteria
+surf6 = (ymax-3<=y & y<=ymax+3)'; %Surface Criteria
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  FARO Corrections  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -296,6 +299,12 @@ end
 if any(surf4(:))==0
     inclsurf_4 = 0;
 end
+if any(surf5(:))==0
+    inclsurf_5 = 0;
+end
+if any(surf6(:))==0
+    inclsurf_6 = 0;
+end
 
 %Remove Excluded Surface Stains as User Previously Defined
 if inclsurf_1 ~= 1
@@ -310,6 +319,12 @@ end
 if inclsurf_4 ~= 1
     surf4 = zeros(size(surf4)); %Remove Surface #4 Stains
 end
+if inclsurf_5 ~= 1
+    surf5 = zeros(size(surf5)); %Remove Surface #5 Stains
+end
+if inclsurf_6 ~= 1
+    surf6 = zeros(size(surf6)); %Remove Surface #6 Stains
+end
 
 Xs = x;
 Ys = y;
@@ -319,22 +334,28 @@ int_s1 = sum(surf1);
 int_s2 = sum(surf2);
 int_s3 = sum(surf3);
 int_s4 = sum(surf4);
+int_s5 = sum(surf5);
+int_s6 = sum(surf6);
 
 inclsurf = sum([inclsurf_1,inclsurf_2,inclsurf_3,inclsurf_4].*[1,2,3,4],1); inclsurf = sum(inclsurf,2);
 surfmat = [[1,2,3,4];[2,3,4,1];[1,2,3,4];[1,2,3,4];[4,1,2,3];[1,2,3,4];[3,4,1,2];[3,4,1,2];[2,3,4,1];[1,2,3,4]];
 
 numstains = size(Xs,1); %Revaluating Variables
 
-%Surface Vector [1n; 2n; 3n; 4n;]
+%Surface Vector [1n; 2n; 3n; 4n; 5n; 6n]
 for j = 1:numstains
-    if room_size(1)-3<=Xs(j) && Xs(j)<=room_size(1)+5
+    if aoi(1)-3<=Xs(j) && Xs(j)<=aoi(1)+3
         face(j) = 1; %Stains Contained on Surface #1
-    elseif room_size(2)-3<=Xs(j) && Xs(j)<=room_size(2)+5
+    elseif aoi(2)-3<=Xs(j) && Xs(j)<=aoi(2)+3
         face(j) = 3; %Stains Contained on Surface #3
-    elseif room_size(3)-3<=Zs(j) && Zs(j)<=room_size(3)+5
+    elseif aoi(5)-3<=Zs(j) && Zs(j)<=aoi(5)+3
         face(j)=4; %Stains Contained on Surface #4
-    elseif room_size(4)-3<=Zs(j) && Zs(j)<=room_size(4)+5
+    elseif aoi(6)-3<=Zs(j) && Zs(j)<=aoi(6)+3
         face(j)=2; %Stains Contained on Surface #2
+    elseif aoi(3)-3<=Ys(j) && Ys(j)<=aoi(3)+3
+        face(j)=5; %Stains Contained on Surface #2
+    elseif aoi(4)-3<=Ys(j) && Ys(j)<=aoi(4)+3
+        face(j)=6; %Stains Contained on Surface #2
     else
         warning(strcat('Stain Index: ', num2str(j), ' does not belong to a surface. Verify the stain location within the input file and room boundaries are properly defined in DRIVER lines 194-199.'));
     end
@@ -362,31 +383,6 @@ end
 rmvnan = double(~isnan(alpha_p)); %Projected Alpha Corrections
 rmvnan(rmvnan==0) = NaN; %Prjected Alpha Corrections
 
-%Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-for k = 1:numstains
-    if alpha_p<0
-        if face(k) == 1;
-            alpha_pg(k,:) = pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif face(k) == 2;
-            alpha_pg(k,:) = 0.5*pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif face(k) == 3;
-            alpha_pg(k,:) = pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif face(k) == 4;
-            alpha_pg(k,:) = 0.5*pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        end
-    else
-        if face(k) == 1;
-            alpha_pg(k,:) = 2*pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif face(k) == 2;
-            alpha_pg(k,:) = 0.5*3*pi+abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif face(k) == 3;
-            alpha_pg(k,:) = pi-abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        elseif face(k) == 4;
-            alpha_pg(k,:) = abs(alpha_p(k)); %Calculate Projected Alpha with Respect to Gravity from Projected Alpha and Surface
-        end
-    end
-end
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%  Matlab Structuring  %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -398,7 +394,6 @@ for jj=1:numstains
     castoff(jj).X_cm = Xs(jj); %X-Coordinate on Surface Vector
     castoff(jj).Y_cm = Ys(jj); %Y-Coordinate on Surface Vector
     castoff(jj).Z_cm = Zs(jj); %Z-Coordinate on Surface Vector
-    castoff(jj).ALPHA_PG_rad = alpha_pg(jj); %Projected Alpha_gravity (Angle between Point on Cast-off Circle, Intersection of Trajectory & Surface, and Plumb Reference Vector
     castoff(jj).ALPHA_rad = alpha(jj); %Alpha Pitching Impact Angle
     castoff(jj).WIDTH_mm = minor(jj); %Minor Axis of Stains in mm
     castoff(jj).LENGTH_mm = lngth(jj); %Major Axis of Stains in mm

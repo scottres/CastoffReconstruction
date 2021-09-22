@@ -1,7 +1,7 @@
-function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,deltagamma,dalpha_range,dgamma_range,SF_cu_range,datamat,clstr_num,iq,comb_num,sig_n,fileID); %Function Determining Castoff Reconstruction
+function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,deltagamma,dalpha_range,dgamma_range,SF_cu_range,datamat,clstr_num,iq,comb_num,sig_n,fileID,S_n); %Function Determining Castoff Reconstruction
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 11/30/2020
+% % % Last Updated 01/18/2021
 % % % 
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
@@ -50,7 +50,7 @@ limit1s = [aoi(1) aoi(3) aoi(5); aoi(2) aoi(3) aoi(5); aoi(2) aoi(3) aoi(6); aoi
 limit2s = [aoi(1) aoi(4) aoi(5); aoi(2) aoi(4) aoi(5); aoi(2) aoi(4) aoi(6); aoi(1) aoi(4) aoi(6); aoi(1) aoi(4) aoi(5)]; %Keep Track of Right Room Dimensions throughout Translations & Rotations
 
 %Find Normal Vector of Plane that Best Fits Given Elements in V
-Xn0 = [0,-1,0]; %Initial Guess/Starting Point for 'fminsearch' Iteration
+Xn0 = S_n; %Initial Guess/Starting Point for 'fminsearch' Iteration
 options = optimset('MaxIter',1e10,'Algorithm','levenberg-marquardt','Display','off','MaxFunEvals',1e5); %Option to View 'fsolve' Iteration
 funn = @(Xn)sum((v*[Xn(1),Xn(2),Xn(3)]').^2); %Function to Minimize Dot Product of All Stain Velocities and Choosen Normal Vector
 Xn = fsolve(funn,Xn0,options); %Minimization of Function, Add ",options" to Procedure to View 'fminsearch' Iteration
@@ -111,20 +111,20 @@ Sz = Xp(3)+w(3,1)*P+w(3,2)*Q; %Compute the Corresponding Cartesian Coordinates u
 %Creating Trajectory Endpoints Into Room Dimension ONLY
 if InOutTrajectory == 1
     for ij = 1:numstains
-                %Trajectory Into Room Dimension ONLY
-                x01(ij,:) = XYZu(ij,1);
-                z01(ij,:) = XYZu(ij,3);
-                x12(ij,:) = XYZu(ij,1)-1000000*Vu(ij,1); %Selecting Projected Alpha Direction
-                z12(ij,:) = XYZu(ij,3)-1000000*Vu(ij,3); %Selecting Projected Alpha Direction
+        %Trajectory Into Room Dimension ONLY
+        x01(ij,:) = XYZu(ij,1);
+        z01(ij,:) = XYZu(ij,3);
+        x12(ij,:) = XYZu(ij,1)-1000000*Vu(ij,1); %Selecting Projected Alpha Direction
+        z12(ij,:) = XYZu(ij,3)-1000000*Vu(ij,3); %Selecting Projected Alpha Direction
     end
 else
     %Create Trajectory Endpoints Into & Out of Room Dimensions
     for ij = 1:numstains
-                %Trajectory In/Out of Room Dimension
-                x01(ij,:) = XYZu(ij,1)-1000000*Vu(ij,1); %Selecting Projected Alpha Direction
-                z01(ij,:) = XYZu(ij,3)-1000000*Vu(ij,3); %Selecting Projected Alpha Direction
-                x12(ij,:) = XYZu(ij,1)+1000000*Vu(ij,1); %Selecting Projected Alpha Direction
-                z12(ij,:) = XYZu(ij,3)+1000000*Vu(ij,3); %Selecting Projected Alpha Direction
+        %Trajectory In/Out of Room Dimension
+        x01(ij,:) = XYZu(ij,1)-1000000*Vu(ij,1); %Selecting Projected Alpha Direction
+        z01(ij,:) = XYZu(ij,3)-1000000*Vu(ij,3); %Selecting Projected Alpha Direction
+        x12(ij,:) = XYZu(ij,1)+1000000*Vu(ij,1); %Selecting Projected Alpha Direction
+        z12(ij,:) = XYZu(ij,3)+1000000*Vu(ij,3); %Selecting Projected Alpha Direction
     end
 end
 
@@ -444,45 +444,21 @@ inf_row_z = any(c_sum_z==0987654321,2); %Remove Infinities (False statements) fr
 nan_row = logical(nan_row_x.*nan_row_z);
 zero_row = logical(zero_row_x.*zero_row_z);
 inf_row = logical(inf_row_x.*inf_row_z);
+row_check = logical(sum([nan_row,zero_row,inf_row],2));
 
 %Remove Elements where Bisector Vectors Do Not Intersect
-c_sum_x((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-c_sum_x((zero_row),:) = []; %Remove Zeroes (False statements) from Resuts
-c_sum_x((inf_row),:) = []; %Remove Infinities (False statements) from Resuts
-c_sum_z((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-c_sum_z((zero_row),:) = []; %Remove Zeroes (False statements) from Resuts
-c_sum_z((inf_row),:) = []; %Remove Infinities (False statements) from Resuts
+c_sum_x((row_check),:) = []; %Remove NaN, Zero, and Inf Rows (False statements) from Resuts
+c_sum_z((row_check),:) = []; %Remove NaN, Zero, and Inf Rows (False statements) from Resuts
 Xi((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Xi((zero_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Xi((inf_row),:) = []; %Remove NaN Rows (False statements) from Resuts
 Zi((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Zi((zero_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Zi((inf_row),:) = []; %Remove NaN Rows (False statements) from Resuts
 Xf((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Xf((zero_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Xf((inf_row),:) = []; %Remove NaN Rows (False statements) from Resuts
 Zf((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Zf((zero_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-Zf((inf_row),:) = []; %Remove NaN Rows (False statements) from Resuts
 XintB12((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-XintB12((zero_row),:) = []; %Remove Zeroes Rows (False statements) from Resuts
-XintB12((inf_row),:) = []; %Remove Infinities Rows (False statements) from Resuts
 ZintB12((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-ZintB12((zero_row),:) = []; %Remove Zeroes Rows (False statements) from Resuts
-ZintB12((inf_row),:) = []; %Remove Infinities Rows (False statements) from Resuts
 bisect1((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-bisect1((zero_row),:) = []; %Remove Zeroes Rows (False statements) from Resuts
-bisect1((inf_row),:) = []; %Remove Infinities Rows (False statements) from Resuts
 bisect2((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-bisect2((zero_row),:) = []; %Remove Zeroes Rows (False statements) from Resuts
-bisect2((inf_row),:) = []; %Remove Infinities Rows (False statements) from Resuts
 INTEG((nan_row),:) = []; %Remove NaN Rows (False statements) from Resuts
-INTEG((zero_row),:) = []; %Remove Zeroes Rows (False statements) from Resuts
-INTEG((inf_row),:) = []; %Remove Infinities Rows (False statements) from Resuts
 INTEG = INTEG(:,1:2); %Collect First Set of Integers
-% FF = any(Alpha12 < (30*pi/180),2); %Remove Locations with Alpha Values below 30 degrees
-% HH = any(Alpha12 > (60*pi/180),2); %Remove Locations with Alpha Values below 30 degrees
-% GG = any(Alpha12 > (60*pi/180),2); %Remove Remaining Locations with Alpha Values above 60 degrees
 BB = c_sum_x; %Renaming Variables
 CC = c_sum_z; %Renaming Variables
 
@@ -499,8 +475,8 @@ numstains = size(XintB12,1); %Revaluating Variable
 %Iterating through all Intersecting Bisector Angles to Determine Distance from Respective Trajectories
 for kkk = 1:numstains
     p2lpt1223 = [XintB12(kkk), 0, ZintB12(kkk)]; %Intersection of Bisector Angles of Every Other traj_shift Trajectories & Every Other traj_shift
-    p2lva1223 = [Xi(kkk), 0, Zi(kkk)]; %Endpoint of Line between Intersections of Adjacent Trajectories & Every Other traj_shift Bisecting Angles
-    p2lvb1223 = [Xf(kkk), 0, Zf(kkk)]; %Endpoint of Line between Intersections of Adjacent Trajectories & Every Other traj_shift Bisecting Angles
+    p2lva1223 = [x_cs1(kkk), 0, z_cs1(kkk)]; %Endpoint of Line between Intersections of Adjacent Trajectories & Every Other traj_shift Bisecting Angles
+    p2lvb1223 = [x_cs2(kkk), 0, z_cs2(kkk)]; %Endpoint of Line between Intersections of Adjacent Trajectories & Every Other traj_shift Bisecting Angles
     point_to_line(p2lpt1223, p2lva1223, p2lvb1223); %Function Determining the Shortest Distance to a Point from a Line
     r_cv1223(kkk) = ans.r_cv; %Radius Results Vector from Intersection of Adjacent (1 to 2) & Every Other traj_shift*2 (2 to 3) Bisecting Angles 
 end
@@ -508,8 +484,6 @@ end
 r_cv1223 = r_cv1223'; %Radius Results Vector from Intersection of Adjacent (1 to 2) & (2 to 3) Bisecting Angles 
 r_sum = r_cv1223; %Compiling Radius Results from all Three Selected Trajectory Intersections into Single Vector
 RR = r_sum; %Renaming Variables
-
-numstains = length(BB); %Revaluating Variable
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%  Determine Trajectory Slope & Normal Point through Center Point  %%%%%
@@ -710,7 +684,7 @@ ns1 = (s2 - s0) / norm(s2 - s0); %Normalize Vectors
 ns2 = (s1 - s0) / norm(s1 - s0); %Normalize Vectors
 
 for si = 1:numstains
-        eta(si,:) = atan2(norm(det([ns2(si,:); ns1(si,:)])), dot(ns1(si,:), ns2(si,:))); %Angle between lines P0-P1 & P0-P2 
+    eta(si,:) = atan2(norm(det([ns2(si,:); ns1(si,:)])), dot(ns1(si,:), ns2(si,:))); %Angle between lines P0-P1 & P0-P2 
 end
 
 for sj = 1:numstains
@@ -758,6 +732,7 @@ theta_ref = lin2+((2*pi-(lin2-lin1))/2); %Determine Reference Line furtherst Out
 if theta_ref>(2*pi)
     theta_ref = theta_ref-(2*pi);
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Plot Results  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -767,13 +742,6 @@ chi = linspace(0, 2*pi, 100); %Angle Vector
 x_fin = (center(1) + radius.*cos(chi))'; %Resultant X-coordinate of Cast-off Circle
 y_fin = (center(2)*ones(size(x_fin))); %Selected Y-coordinate of Cast-off Circle
 z_fin = (center(3) + radius.*sin(chi))'; %Resultant Z-coordinate of Cast-off Circle
-
-% ************************************************
-% % ***** Use when Cast-off Motion is known *****
-% x_actual = actual_x + actual_r.*cos(chi); %Resultant X-coordinate of Cast-off Circle
-% y_actual = actual_y*ones(size(x_actual)); %Resultant Y-coordinate of Cast-off Circle
-% z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-coordinate of Cast-off Circle
-% ************************************************
 
 %Rotate Results from XZ-plane to Original Best Plane
 U2 = U1; %Choose Previously Determined Line of Intersection between XZ-plane and Plane Best Fitting Stain Velocity Vectors 
@@ -908,6 +876,7 @@ for cu3 = 1:numel(cu_cx)
     Psi_cu(cu3,:) = (1/(Spread_Fact_cu*sqrt(2*pi)))*exp((-1/2)*(dist_cu(cu3)/(Spread_Fact_cu)).^2); %Weight to be Added to Each Cube
     
 end
+
 %Product Distribution
 Psi_tot = Psi_cu;
 

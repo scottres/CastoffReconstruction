@@ -1,6 +1,6 @@
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 09/29/2020
+% % % Last Updated 02/01/2021
 % % % 
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
@@ -44,7 +44,7 @@
 
 clear,clc,close all
 
-load('Ink_Trial_INPUT.mat');
+load('INK_Trial_INPUT.mat');
 
 number_traces = 1; %Number of Cast-off Swings
 regions = [0.95, 0.75,0.60]
@@ -74,11 +74,6 @@ end;
 for ref1 = 1:numstains;
     p8(ref1) = plot3([(Xs(ref1)-10000*v(ref1,1)) (Xs(ref1)+10000*v(ref1,1))],[(Ys(ref1)-10000*v(ref1,2)) (Ys(ref1)+10000*v(ref1,2))],[(Zs(ref1)-10000*v(ref1,3)) (Zs(ref1)+10000*v(ref1,3))],'Color','r','LineWidth',1);
 end;
-% ************************************************
-% % ***** Use when Cast-off Motion is known *****
- p3 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
- p4 = plot3(actual_x,actual_y,actual_z,'p','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
-% ************************************************
 colorcu = {[1,0,0];[0,1,0];[0,0,1];[0,1,1]};
 transcu = [1.0 0.5 0.2 0.2 0.1 0.075 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05];
 
@@ -89,27 +84,27 @@ elseif ~(any(isonorm(:) < (percentiles(2))));
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)),'noshare'),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    volumes_cc = abs([meshVolume(v1,[],f1)]) %Vol_Region_1 = (sum(isonorm(:) > percentiles(1)))*res^3
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
 elseif ~(any(isonorm(:) < (percentiles(3))));
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)),'noshare'),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)),'noshare'),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
    volumes_cc = abs([meshVolume(v1,[],f1) meshVolume(v2,[],f2)]) %Vol_Region_1 = (sum(isonorm(:) > percentiles(1)))*res^3
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(2)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
 else   
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)),'noshare'),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)),'noshare'),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
    p7 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(3)),'noshare'),'FaceColor',cell2mat(colorcu(3)),'EdgeAlpha',transcu(4),'FaceAlpha',transcu(3));
    volumes_cc = abs([meshVolume(v1,f1) meshVolume(v2,f2) meshVolume(v3,f3)]) %Vol_Region_1 = (sum(isonorm(:) > percentiles(1)))*res^3
    p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(percentiles(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(percentiles(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
 end
 
 title({'Castoff Reconstruction'});
 xlabel(['X-Axis (cm)']);
 ylabel(['Y-Axis (cm)']);
 zlabel(['Z-Axis (cm)']);
-view(-30,30);
+view(S_n);
 set(gca,'FontSize',20);
 axis equal;
 hold off;

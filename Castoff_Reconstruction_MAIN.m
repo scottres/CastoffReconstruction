@@ -1,7 +1,38 @@
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 01/25/2021
+% % %
+% Scott McCleary
+% Email: scott.thomas.mccleary@gmail.com | daniel.attinger@gmail.com
+% Phone: (515) 975-5544
+% Spatter Stains to Cast-off Reconstruction
+% Center for Statistics and Applications in Forensic Evidence
+% Department of Mechanical Engineering - Attinger Lab
+% Iowa State University
+% % %
+% % % Last Updated 09/23/2021
 % % % 
+% % % Required Repository Files to run the code:
+% % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'
+% % %  - 'Castoff_Reconstruction_DRIVER.m'
+% % %  - 'DRIVER.csv' produces 'DRIVER.mat' required for 'Castoff_Reconstruction_MAIN.m'
+% % %  - 'Castoff_Reconstruction_MAIN.m'
+% % %  - 'Castoff_Reconstruction_FUNC.m'
+% % %  - 'lineSegmentIntersect.m'
+% % %  - 'meshVolume.m'
+% % %  - 'point_to_line.m'
+% % %  - 'gauss_distribution.m'
+% % %  - 'CircleFitByPratt.m'
+% % %  - 'Castoff_Reconstruction_POST.m'
+% % %  - 'combvec2.m'
+% % %  - 'inpolyhedron.m' 
+% % %  - 'triangulateFaces.m' 
+% % %  - 'linecirc.m'
+% % %  - 'generate_input.m'
+% % %    - 'linecirc.m'
+% % %    - 'plane_line_intersect.m'
+% % %    - 'rotate_3D.m'
+% % %    - 'triangulateFaces.m'
+% % %   
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
 % % % 
@@ -10,7 +41,7 @@
 % % % User Inputs: (INPUT & DRIVER)
 % % %  - 'x','y','z' stain coordinate locations (in centimeters) relative to user defined origin (INPUT)
 % % %  - 'lngth','minor' major and minor axis lengths of stains in mm (INPUT)
-% % %  - 'alpha','gamma' stain impact and directional angles (INPUT)
+% % %  - 'gamma' stain impact and directional angles (INPUT)
 % % %  - 'room', room length (along x-dimension), width (along y-dimension), and height (along z-direction) (x,y,z) in centimeters (INPUT)
 % % %  - 'xmin','xmax','ymin','ymax','zmin','zmax' minimum and maximum coordinate of possible region of cast-off origin) (DRIVER)
 % % %  - 'res' Spatial resolution of reconstruction (Length of Discretized Uniform Regions of Space Dimensions) (1-15cm is the recommended range) (15cm took ~30 seconds, 10cm took ~1 minute, and 7.5cm took ~1 hour in a large room with several hundred stains and default specifications) (INPUT)
@@ -61,7 +92,7 @@ tic()
 %%%%%%%%%%%%%%%%%%%%%%%%%%  User Defined Values  %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-data = 'Six_Surface_Trial_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 7 of 'McCleary et al FSI 2021', respectively OR data = 'FARO_Trial_10_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 6 of 'McCleary et al FSI 2021', respectively
+data = 'INK_Trial_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 7 of 'McCleary et al FSI 2021', respectively OR data = 'FARO_Trial_10_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 6 of 'McCleary et al FSI 2021', respectively
 
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 sig_n = 3; %Minimum PDF Value Standard Deviations

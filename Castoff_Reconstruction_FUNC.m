@@ -1,8 +1,38 @@
-function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,alpha,alpha_pg,alpha_orig,gamma,minor,Ref,InOutTrajectory,InRoom,max_room_size,min_room_size,Lx,Ly,Lz,Nx,Ny,Nz,res,xmin,ymin,zmin,stdev,cu_cx,cu_cy,cu_cz,ip,isocubes,deltagamma,dalpha_range,dgamma_range,SF_cu_range,datamat,clstr_num,iq,comb_num,sig_n,fileID,S_n); %Function Determining Castoff Reconstruction
 % % % %%%%% MATLAB/Octave Cast-off Reconstruction %%%%%
 % % % Reconstructs stains from cast-off event to reproduce the motion of cast-off.
-% % % Last Updated 01/18/2021
+% % %
+% Scott McCleary
+% Email: scott.thomas.mccleary@gmail.com | daniel.attinger@gmail.com
+% Phone: (515) 975-5544
+% Spatter Stains to Cast-off Reconstruction
+% Center for Statistics and Applications in Forensic Evidence
+% Department of Mechanical Engineering - Attinger Lab
+% Iowa State University
+% % %
+% % % Last Updated 09/23/2021
 % % % 
+% % % Required Repository Files to run the code:
+% % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'
+% % %  - 'Castoff_Reconstruction_DRIVER.m'
+% % %  - 'DRIVER.csv' produces 'DRIVER.mat' required for 'Castoff_Reconstruction_MAIN.m'
+% % %  - 'Castoff_Reconstruction_MAIN.m'
+% % %  - 'Castoff_Reconstruction_FUNC.m'
+% % %  - 'lineSegmentIntersect.m'
+% % %  - 'meshVolume.m'
+% % %  - 'point_to_line.m'
+% % %  - 'gauss_distribution.m'
+% % %  - 'CircleFitByPratt.m'
+% % %  - 'Castoff_Reconstruction_POST.m'
+% % %  - 'combvec2.m'
+% % %  - 'inpolyhedron.m' 
+% % %  - 'triangulateFaces.m' 
+% % %  - 'linecirc.m'
+% % %  - 'generate_input.m'
+% % %    - 'linecirc.m'
+% % %    - 'plane_line_intersect.m'
+% % %    - 'rotate_3D.m'
+% % %    - 'triangulateFaces.m'
+% % %   
 % % % Licenses:
 % % % All licenses for third party scripts are included and must be kept with provided scripts. If third party materials were not cited within the repository Licenses folder, this was not intentional by the author.
 % % % 
@@ -11,7 +41,7 @@ function [Psi_tot,Sn] = Castoff_Reconstruction_FUNC(face,v,aoi,Xs,Ys,Zs,alpha_p,
 % % % User Inputs: (INPUT & DRIVER)
 % % %  - 'x','y','z' stain coordinate locations (in centimeters) relative to user defined origin (INPUT)
 % % %  - 'lngth','minor' major and minor axis lengths of stains in mm (INPUT)
-% % %  - 'alpha','gamma' stain impact and directional angles (INPUT)
+% % %  - 'gamma' stain impact and directional angles (INPUT)
 % % %  - 'room', room length (along x-dimension), width (along y-dimension), and height (along z-direction) (x,y,z) in centimeters (INPUT)
 % % %  - 'xmin','xmax','ymin','ymax','zmin','zmax' minimum and maximum coordinate of possible region of cast-off origin) (DRIVER)
 % % %  - 'res' Spatial resolution of reconstruction (Length of Discretized Uniform Regions of Space Dimensions) (1-15cm is the recommended range) (15cm took ~30 seconds, 10cm took ~1 minute, and 7.5cm took ~1 hour in a large room with several hundred stains and default specifications) (INPUT)

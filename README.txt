@@ -38,6 +38,7 @@
 % % % 
 % % % Required Installation for GNU Octave Compatibility: (Suggested Installation Order)
 % % %  - Updated GNU Octave (written and tested with 5.2.0) (https://www.gnu.org/software/octave/download.html)
+% % %    - Here is the link for previous GNU Octave version downloads (5.2.0) for windows: https://mirrors.sarata.com/gnu/octave/windows/
 % % % 	 - All packages can be updated to the latest version by running:
 % % %   		>> pkg update
 % % %  - Updated Java (https://www.java.com/en/download/win10.jsp)

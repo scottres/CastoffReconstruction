@@ -92,7 +92,7 @@ tic()
 %%%%%%%%%%%%%%%%%%%%%%%%%%  User Defined Values  %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-data = 'INK_Trial_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 7 of 'McCleary et al FSI 2021', respectively OR data = 'FARO_Trial_10_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 6 of 'McCleary et al FSI 2021', respectively
+data = 'Six_Surface_Trial_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 7 of 'McCleary et al FSI 2021', respectively OR data = 'FARO_Trial_10_INPUT_DRIVER.mat'; %Producing figure(3) and figure(4+) which simulate Figures 5 and 6 of 'McCleary et al FSI 2021', respectively
 
 load(data); %'Castoff_Reconstruction_DRIVER_SWINEBLOOD.mat' OR 'Castoff_Reconstruction_DRIVER_LISCIO_TRIAL_2_UPDATED.mat'
 sig_n = 3; %Minimum PDF Value Standard Deviations

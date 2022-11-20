@@ -75,7 +75,7 @@
 
 clear,clc,close all
 
-load('INK_Trial_INPUT.mat');
+load('Six_Surface_Trial_INPUT.mat');
 
 number_traces = 1; %Number of Cast-off Swings
 regions = [0.95, 0.75,0.60]

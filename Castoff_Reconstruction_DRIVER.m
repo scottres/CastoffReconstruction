@@ -92,7 +92,7 @@ tic
 %%%%%%%%%%%%%%%%%%%  Import Data from Excel Spreadsheet  %%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-drive_data = 'Six_Surface_Trial_INPUT.csv';
+drive_data = 'Ink_Trial_INPUT.csv';
 
 num_ref = xlsread(drive_data); %Read in .CSV data file
 num_ref = size(num_ref,1)+2; %Determine Length of Columns

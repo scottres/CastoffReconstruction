@@ -9,7 +9,7 @@
 % Department of Mechanical Engineering - Attinger Lab
 % Iowa State University
 % % %
-% % % Last Updated 09/23/2021
+% % % Last Updated 11/20/2022
 % % % 
 % % % Required Repository Files to run the code:
 % % %  - Spatter Measurement Data, e.g. 'Ink_Trial_INPUT.csv', 'Swineblood_Trial_INPUT.csv'
@@ -95,9 +95,15 @@
 % % %
 % % % Instructions to Run your own data:
 % % % 1. Make sure you have Matlab or Octave installed as per the installation instructions above
-% % % 2. Enter spatter pattern information in an input 'input.csv' file with same format as either of the examples above
+% % % 2. Enter spatter pattern information in an input '_INPUT.csv' file with same format as either of the examples above
 % % % 3. Modify the data name line 64 in the MAIN ('Castoff_Reconstruction_MAIN.m') to 'input_DRIVER.mat'
 % % % 4. Follow same instructions (4-10) as either examples above.
+% % % 
+% % % Note: If actual cast-off motion is known (for research purposes only):
+% % %   - Enter known cast-off motion path x, y, and z-coordinates into '_MOTION.csv' with same format as 'Ink_Trial_MOTION.csv'
+% % %   - Follow same instructions (4-10) as either examples above.
+% % %   - 'Run' (F5) the Post-processor ('Castoff_Reconstruction_POST.m')
+% % % 
 % % % 
 % % % Figure Displaying:
 % % %  - Show and hide legends from resultant figures using:

@@ -3,7 +3,7 @@ Cast-off Reconstruction Inputs:,,,,,,,,,,,,,,,
 Room Dimensions:,248,100,243,,,Distance to Room Corner from Measurement Origin:,0,0,0,,,,,,
 ,,,,,,,,,,,,,,,
 ,Actual Center X-coordinate (cm),Actual Center Y-coordinate (cm),Actual Center Z-coordinate (cm),Actual Radius (cm),,,Stain Width Measurement Uncertainty (mm),Cast-off Reconstruction Resolution (cm),,,,,,,
-Actual Cast-off Circle (if known):,,,,,,Uncertainty/Resolution:,0.1,7.5,,,,,,,
+Actual Cast-off Circle (if known):,125,50,125,50,,Uncertainty/Resolution:,0.1,7.5,,,,,,,
 ,,,,,,,,,,,,,,,
 "Stain Location, Orientation, and Impact Angle Inputs:",,,,,,,,,,,,,,,
 Project,Pattern,Stain,Location x,Location y,Location z,Surface,M axis (mm),m axis (mm),alpha (deg),beta (deg),gamma (deg),Intersect x,Intersect y,Intersect z,"Measured Uncertainty in Gamma Angles (deg),  [Default: - Leave Empty -]"

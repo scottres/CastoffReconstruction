@@ -75,11 +75,40 @@
 
 clear,clc,close all
 
-load('Six_Surface_Trial_INPUT.mat');
+Reconstructed_Castoff = 'Ink_Trial_INPUT.mat';
+Castoff_ref = regexprep(Reconstructed_Castoff,'INPUT.mat','','ignorecase'); %Remove filetype for '_MOTION' subscript identification
+load(Reconstructed_Castoff);
 
 number_traces = 1; %Number of Cast-off Swings
 regions = [0.95, 0.75,0.60]
 percentiles = [regions(1)^(number_traces*NUM_clstr), regions(2)^(number_traces*NUM_clstr), regions(3)^(number_traces*NUM_clstr)]
+
+actual_castoff = xlsread(drive_data,'B6:E6'); %Import Actual Castoff Circle (if known)
+if any(actual_castoff,2);
+   actual_x = actual_castoff(1); %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_y = actual_castoff(2); %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_z = actual_castoff(3); %Actual Z-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_r = actual_castoff(4); %Actual Radius of Cast-off; Enter "NaN" if Unknown
+elseif isfile(strcat(Castoff_ref,'MOTION.csv'))
+   [obj_num,~,~] = xlsread(strcat(Castoff_ref,'MOTION.csv'));
+   actual_x = obj_num(:,1);
+   actual_x(1) = [];
+   actual_y = obj_num(:,2);
+   actual_y(1) = [];
+   actual_z = obj_num(:,3);
+   actual_z(1) = [];
+   actual_r = NaN;
+   if isempty(actual_x) || isempty(actual_y) || isempty(actual_z)
+     actual_x = NaN; %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+     actual_y = NaN; %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+     actual_z = NaN; %Actual Z-Coordinate of Center Location; Enter "NaN" if Unknown
+   end
+else 
+   actual_x = NaN; %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_y = NaN; %Actual X-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_z = NaN; %Actual Z-Coordinate of Center Location; Enter "NaN" if Unknown
+   actual_r = NaN; %Actual Radius of Cast-off; Enter "NaN" if Unknown
+end
 
 fig_num = 3+iq;
 fig_num = 3+iq;
@@ -94,11 +123,24 @@ p9 = plot3(x_orig,y_orig,z_orig,'.','Color','c','MarkerSize',10); %Plot Original
 p2 = plot3(Xs,Ys,Zs,'.','Color','r','MarkerSize',15); %Plot XYZ Stains
 chi = linspace(0, 2*pi, 25); %Angle Vector
 % ************************************************
-% % ***** Use when Cast-off Motion is known *****
-% x_actual = actual_x + actual_r.*cos(chi); %Resultant X-Coordinate of Cast-off Circle
-% y_actual = actual_y*ones(size(x_actual)); %Resultant Y-Coordinate of Cast-off Circle
-% z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-Coordinate of Cast-off Circle
-% ************************************************
+ % ***** Use when Cast-off Motion is known *****
+if any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1 && isnan([actual_r])==0
+  x_actual = actual_x + actual_r.*cos(chi); %Resultant X-Coordinate of Cast-off Circle
+  y_actual = actual_y*ones(size(x_actual)); %Resultant Y-Coordinate of Cast-off Circle
+  z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-Coordinate of Cast-off Circle
+  
+  p3 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
+  p4 = Sca3(actual_x,actual_y,actual_z,'.','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
+elseif any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1
+  p4 = plot3(actual_x,actual_y,actual_z,'.','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
+else
+  x_actual = NaN;
+  y_actual = NaN;
+  z_actual = NaN;
+  
+  p3 = NaN;
+  p4 = NaN;
+end
 for ref1 = 1:numstains;
     p10(ref1) = plot3([(x_orig(ref1)-10000*v_orig(ref1,1)) (x_orig(ref1)+10000*v_orig(ref1,1))],[(y_orig(ref1)-10000*v_orig(ref1,2)) (y_orig(ref1)+10000*v_orig(ref1,2))],[(z_orig(ref1)-10000*v_orig(ref1,3)) (z_orig(ref1)+10000*v_orig(ref1,3))],'Color','c','LineWidth',1);
 end;
@@ -109,26 +151,46 @@ colorcu = {[1,0,0];[0,1,0];[0,0,1];[0,1,1]};
 transcu = [1.0 0.5 0.2 0.2 0.1 0.075 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05];
 
 if isempty(nonzeros(isonorm-ones(size(isonorm)))) == 1 || ~(any(isonorm(:) < (percentiles(1))));
-   p = [p1_front p1_downward p1_back p1_upward p2 p3 p4 p8(1) p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Actual Castoff Circle Location', 'Actual Castoff Center Location', 'Stain Straight-line Trajectories', 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   if any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1
+     p = [p1_front p1_downward p1_back p1_upward p2 p4 p8(1) p9 p10(1)]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Actual Castoff Motion', 'Stain Straight-line Trajectories', 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   else
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p9 p10(1)]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   end
 elseif ~(any(isonorm(:) < (percentiles(2))));
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)),'noshare'),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    volumes_cc = abs([meshVolume(v1,[],f1)]) %Vol_Region_1 = (sum(isonorm(:) > percentiles(1)))*res^3
-   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   if any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1) p4]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Actual Castoff Motion', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   else
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1)]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   end
 elseif ~(any(isonorm(:) < (percentiles(3))));
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)),'noshare'),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)),'noshare'),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
    volumes_cc = abs([meshVolume(v1,[],f1) meshVolume(v2,[],f2)]) %Vol_Region_1 = (sum(isonorm(:) > percentiles(1)))*res^3
-   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(2)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   if any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1) p4]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Actual Castoff Motion', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   else
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p9 p10(1)]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   end
 else   
    p5 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(1)),'noshare'),'FaceColor',cell2mat(colorcu(1)),'EdgeAlpha',transcu(1),'FaceAlpha',transcu(1));
    p6 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(2)),'noshare'),'FaceColor',cell2mat(colorcu(2)),'EdgeAlpha',transcu(3),'FaceAlpha',transcu(2));
    p7 = patch(isosurface(Xcu,Ycu,Zcu,isonorm,(percentiles(3)),'noshare'),'FaceColor',cell2mat(colorcu(3)),'EdgeAlpha',transcu(4),'FaceAlpha',transcu(3));
    volumes_cc = abs([meshVolume(v1,f1) meshVolume(v2,f2) meshVolume(v3,f3)]) %Vol_Region_1 = (sum(isonorm(:) > percentiles(1)))*res^3
-   p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1)]; % p3 p4
-   legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   if any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1) p4]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Actual Castoff Motion', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+   else
+     p = [p1_front p1_downward p1_back p1_upward p2 p8(1) p5 p6 p7 p9 p10(1)]; % p3 p4
+     legend(p, 'Front Surface', 'Downward Surface', 'Back Surface', 'Upward Surface', 'Spatter Stains', 'Stain Straight-line Trajectories', strcat(num2str(regions(1)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(2)*100), 'th Percentile Castoff Reconstruction'), strcat(num2str(regions(3)*100), 'th Percentile Castoff Reconstruction'), 'Spatter Stains not Included in Analysis', 'Stain Straight-line Trajectories not Included in Analysis', 'Location', 'northeastoutside'); % 'Actual Castoff Circle Location', 'Actual Castoff Center Location',
+     end
 end
 
 title({'Castoff Reconstruction'});

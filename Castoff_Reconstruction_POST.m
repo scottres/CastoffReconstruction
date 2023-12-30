@@ -130,7 +130,7 @@ if any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1 && isnan([actual_r])=
   z_actual = actual_z + actual_r.*sin(chi); %Resultant Z-Coordinate of Cast-off Circle
   
   p3 = plot3(x_actual,y_actual,z_actual,'Color','m','LineWidth',3); %Plot Actual Cast-off Circle
-  p4 = Sca3(actual_x,actual_y,actual_z,'.','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
+  p4 = plot3(actual_x,actual_y,actual_z,'.','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
 elseif any(any(isnan([actual_x,actual_y,actual_z]),2)==0,1)==1
   p4 = plot3(actual_x,actual_y,actual_z,'.','MarkerSize',10,'Color','m','LineWidth',3); %Plot Actual Cast-off Center Location
 else

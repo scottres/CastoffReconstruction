@@ -14,6 +14,22 @@
   
   _**Last Updated 12/30/2023**_ &#127881;
 
+  ## Note to user:
+  
+  ### Surface and Stain Orientation Definitions:
+
+  ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/e548b7c2-fd71-4e63-8d71-23647b1b5bc6)
+
+  - _Surface Tangential Vector (t&#770;)_ :
+    - _Definition_ : vector tangential to a surface aligned in the direction of gravity (_**-**z-direction_) for all _non-horizonal surfaces_
+      - for perfectly horizontal surfaces, e.g. _upward_ surface (ceiling) and _downward_ surface (floor), the -z-direction aligns with the Surface Normal Vector. In these instances, the _Surface Tangential Vector (t&#770;)_ is defined in the _**+**x-direction_
+  - _Surface Normal Vector (n&#770;)_ :
+    - _Definition_ : vector normal to a surface pointing _**outside**_ the room
+  - _**Gamma (&gamma;) :  stain directional angle (relative to impacted surface):**_
+    - **_Definition_ : stain glancing angle between the projected trajectory vector onto the impacted surface and the tangent vector to the surface**
+  - _Alpha (&alpha;) : stain impact angle_
+    - _Definition_ : stain impact angle between the trajectory vector and the impacted surface 
+
   ## Required Repository Files to run the code:
   
   - Spatter Measurement Data, e.g. `Ink_Trial_INPUT.csv`, `Swineblood_Trial_INPUT.csv`

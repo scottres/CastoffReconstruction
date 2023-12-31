@@ -124,6 +124,32 @@
   3. Modify the data name line 64 in the MAIN (`Castoff_Reconstruction_MAIN.m`) to `input_DRIVER.mat`
   4. Follow same instructions (4-10) as either examples above.
 
+  ## Expected Outputs : `Castoff_Reconstruction_DRIVER.m`
+
+  - creates a `_DRIVER.mat` file as input for `Castoff_Reconstruction_MAIN.m`
+    - ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/6ff713dc-376a-4d9d-90e9-20ab2478ed36)
+
+  ## Expected Outputs : `Castoff_Reconstruction_MAIN.m`
+
+  ### Figures:
+
+  - `figure(2)`
+    - **inputs overview** : an initial look at the inputted room dimensions, stain impact locations, stain trajectories, automated reference point, and best fit plane
+    - ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/1fc9917a-a914-49d9-b143-77a18550afd5)
+   
+  - `figure(3)`
+    - **reconstruction overview** : an active display of clustered stains & trajectories and clustered planes with projected stains reference during spatter reconstruction
+    - ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/030f229c-67de-47d1-9b58-ae359c9b99fe)
+   
+  - `figure(4)`
+    - **reconstruction results** : inputs overview overlaid with user-defined three-dimensional region of statistical likelihood
+    - ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/0778fa92-9148-4a43-af0b-72ebfc510716)
+   
+  ### Files:
+
+  - saved simulation workspace and textual overview of `INPUTS` (resolution, user preferences, inputed stain details) and `Cast-off Reconstruction Results:` (High, Medium, and Low Percentile reconstructed XYZ-Vertices & Faces)
+    - ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/90ca379c-8240-40f6-b1bd-79e8417dbf5c)
+
   ### Note: If actual cast-off motion is known (for research purposes only):
   
   - Enter known cast-off motion path x, y, and z-coordinates into `_MOTION.csv` with same format as `Ink_Trial_MOTION.csv`

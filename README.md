@@ -12,13 +12,15 @@
     Iowa State University
   >>>
   
-  _**Last Updated 12/30/2023**_ &#127881;
+  _**Last Updated 01/06/2024**_ &#127881;
 
   ## Note to user:
   
   ### Surface and Stain Orientation Definitions:
 
-  ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/e548b7c2-fd71-4e63-8d71-23647b1b5bc6)
+  ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/e71faca0-0dfe-495f-82af-293925295205)
+
+  ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/16bed7fb-f392-4541-965e-eb3aa8c83663)
 
   - _Surface Tangential Vector (t&#770;)_ :
     - _Definition_ : vector tangential to a surface aligned in the direction of gravity (_**-**z-direction_) for all _non-horizonal surfaces_
@@ -121,6 +123,8 @@
     
   1. Make sure you have Matlab or Octave installed as per the installation instructions above
   2. Enter spatter pattern information in an input `_INPUT.csv` file with same format as either of the examples above
+    - ![image](https://github.com/scottres/CastoffReconstruction/assets/66079745/8439dd09-a8ae-4bcf-9ef4-128df1dbb1f1)
+
   3. Modify the data name line 64 in the MAIN (`Castoff_Reconstruction_MAIN.m`) to `input_DRIVER.mat`
   4. Follow same instructions (4-10) as either examples above.
 
